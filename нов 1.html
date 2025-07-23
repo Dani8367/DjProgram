@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional DJ Mixer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dj-mixer">
+        <header>
+            <h1>Professional DJ Mixer</h1>
+            <div class="master-controls">
+                <div class="master-volume">
+                    <label>Master Volume</label>
+                    <input type="range" min="0" max="1" value="0.8" step="0.01" id="masterVolume">
+                </div>
+                <button class="control-btn" id="automixBtn"><i class="fas fa-random"></i> Automix</button>
+            </div>
+        </header>
+
+        <div class="decks-container">
+            <div class="deck" id="deck1">
+                <div class="deck-header">
+                    <h2>Deck 1</h2>
+                    <div class="bpm-display">
+                        <span id="bpm1">--</span> BPM
+                    </div>
+                </div>
+                
+                <div class="waveform-container">
+                    <div class="waveform" id="waveform1"></div>
+                    <div class="position-indicator" id="position1"></div>
+                </div>
+                
+                <div class="transport-controls">
+                    <div class="jog-wheel" id="jog1">
+                        <div class="jog-center"></div>
+                    </div>
+                    
+                    <div class="playback-controls">
+                        <button class="control-btn cue-btn" data-deck="1"><i class="fas fa-undo"></i></button>
+                        <button class="control-btn play-pause-btn" data-deck="1"><i class="fas fa-play"></i></button>
+                        <button class="control-btn sync-btn" data-deck="1">SYNC</button>
+                    </div>
+                    
+                    <div class="pitch-control">
+                        <div class="pitch-value" id="pitchValue1">±0.0%</div>
+                        <input type="range" min="-8" max="8" value="0" step="0.1" class="pitch-slider" data-deck="1">
+                    </div>
+                </div>
+                
+                <div class="eq-controls">
+                    <div class="eq-band">
+                        <label>High</label>
+                        <input type="range" min="0" max="2" value="1" step="0.01" class="eq-high" data-deck="1">
+                    </div>
+                    <div class="eq-band">
+                        <label>Mid</label>
+                        <input type="range" min="0" max="2" value="1" step="0.01" class="eq-mid" data-deck="1">
+                    </div>
+                    <div class="eq-band">
+                        <label>Low</label>
+                        <input type="range" min="0" max="2" value="1" step="0.01" class="eq-low" data-deck="1">
+                    </div>
+                </div>
+
+                <div class="fx-controls">
+                    <h3>FX</h3>
+                    <div class="fx-band">
+                        <label>Low Pass Filter</label>
+                        <input type="range" min="20" max="22000" value="22000" step="100" class="lpf-filter" data-deck="1">
+                    </div>
+                </div>
+                
+                <div class="volume-control">
+                    <input type="range" min="0" max="1" value="1" step="0.01" class="volume-slider" data-deck="1" orient="vertical">
+                </div>
+                
+                <div class="file-controls">
+                    <label for="fileInput1" class="file-input-label">
+                        <i class="fas fa-folder-open"></i> Load Track
+                    </label>
+                    <input type="file" accept="audio/*" id="fileInput1" class="file-input" multiple>
+                    <div class="track-info" id="trackInfo1">No track loaded</div>
+                </div>
+                
+                <div class="loop-controls">
+                    <button class="control-btn loop-in-btn" data-deck="1">IN</button>
+                    <button class="control-btn loop-out-btn" data-deck="1">OUT</button>
+                    <button class="control-btn loop-btn" data-deck="1">LOOP</button>
+                    <div class="loop-length">
+                        <select class="loop-length-select" data-deck="1">
+                            <option value="1">1 beat</option>
+                            <option value="2">2 beats</option>
+                            <option value="4">4 beats</option>
+                            <option value="8">8 beats</option>
+                            <option value="16">16 beats</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="hotcue-controls">
+                    <h3>Hot Cues</h3>
+                    <div class="hotcue-buttons">
+                        <button class="control-btn hotcue-btn" data-deck="1" data-cue="1">Cue 1</button>
+                        <button class="control-btn hotcue-btn" data-deck="1" data-cue="2">Cue 2</button>
+                        <button class="control-btn hotcue-btn" data-deck="1" data-cue="3">Cue 3</button>
+                        <button class="control-btn hotcue-clear-btn" data-deck="1">Clear All</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="deck" id="deck2">
+                <div class="deck-header">
+                    <h2>Deck 2</h2>
+                    <div class="bpm-display">
+                        <span id="bpm2">--</span> BPM
+                    </div>
+                </div>
+                
+                <div class="waveform-container">
+                    <div class="waveform" id="waveform2"></div>
+                    <div class="position-indicator" id="position2"></div>
+                </div>
+                
+                <div class="transport-controls">
+                    <div class="jog-wheel" id="jog2">
+                        <div class="jog-center"></div>
+                    </div>
+                    
+                    <div class="playback-controls">
+                        <button class="control-btn cue-btn" data-deck="2"><i class="fas fa-undo"></i></button>
+                        <button class="control-btn play-pause-btn" data-deck="2"><i class="fas fa-play"></i></button>
+                        <button class="control-btn sync-btn" data-deck="2">SYNC</button>
+                    </div>
+                    
+                    <div class="pitch-control">
+                        <div class="pitch-value" id="pitchValue2">±0.0%</div>
+                        <input type="range" min="-8" max="8" value="0" step="0.1" class="pitch-slider" data-deck="2">
+                    </div>
+                </div>
+                
+                <div class="eq-controls">
+                    <div class="eq-band">
+                        <label>High</label>
+                        <input type="range" min="0" max="2" value="1" step="0.01" class="eq-high" data-deck="2">
+                    </div>
+                    <div class="eq-band">
+                        <label>Mid</label>
+                        <input type="range" min="0" max="2" value="1" step="0.01" class="eq-mid" data-deck="2">
+                    </div>
+                    <div class="eq-band">
+                        <label>Low</label>
+                        <input type="range" min="0" max="2" value="1" step="0.01" class="eq-low" data-deck="2">
+                    </div>
+                </div>
+
+                <div class="fx-controls">
+                    <h3>FX</h3>
+                    <div class="fx-band">
+                        <label>Low Pass Filter</label>
+                        <input type="range" min="20" max="22000" value="22000" step="100" class="lpf-filter" data-deck="2">
+                    </div>
+                </div>
+                
+                <div class="volume-control">
+                    <input type="range" min="0" max="1" value="1" step="0.01" class="volume-slider" data-deck="2" orient="vertical">
+                </div>
+                
+                <div class="file-controls">
+                    <label for="fileInput2" class="file-input-label">
+                        <i class="fas fa-folder-open"></i> Load Track
+                    </label>
+                    <input type="file" accept="audio/*" id="fileInput2" class="file-input" multiple>
+                    <div class="track-info" id="trackInfo2">No track loaded</div>
+                </div>
+                
+                <div class="loop-controls">
+                    <button class="control-btn loop-in-btn" data-deck="2">IN</button>
+                    <button class="control-btn loop-out-btn" data-deck="2">OUT</button>
+                    <button class="control-btn loop-btn" data-deck="2">LOOP</button>
+                    <div class="loop-length">
+                        <select class="loop-length-select" data-deck="2">
+                            <option value="1">1 beat</option>
+                            <option value="2">2 beats</option>
+                            <option value="4">4 beats</option>
+                            <option value="8">8 beats</option>
+                            <option value="16">16 beats</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="hotcue-controls">
+                    <h3>Hot Cues</h3>
+                    <div class="hotcue-buttons">
+                        <button class="control-btn hotcue-btn" data-deck="2" data-cue="1">Cue 1</button>
+                        <button class="control-btn hotcue-btn" data-deck="2" data-cue="2">Cue 2</button>
+                        <button class="control-btn hotcue-btn" data-deck="2" data-cue="3">Cue 3</button>
+                        <button class="control-btn hotcue-clear-btn" data-deck="2">Clear All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mixer-section">
+            <div class="crossfader-container">
+                <h3>Crossfader</h3>
+                <input type="range" min="0" max="1" value="0.5" step="0.01" id="crossfader">
+            </div>
+        </div>
+
+        <div class="mixer-section playlist-section">
+            <h3>Playlist <span id="playlistCount">(0 tracks)</span></h3>
+            <ul id="playlistTracks">
+                </ul>
+            <div class="playlist-controls">
+                <button class="control-btn" id="clearPlaylistBtn"><i class="fas fa-trash-alt"></i> Clear Playlist</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/wavesurfer.js@7"></script>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.audioBuffer = null; // Store audio buffer for BPM analysis
             this.wavesurfer = null;
             this.hotCues = {}; // Stores { '1': time, '2': time, '3': time }
+            this.currentFile = null; // Store the currently loaded File object for automix logic
             
             this.eq = {
                 high: audioContext.createBiquadFilter(),
@@ -150,16 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // Reconnect Wavesurfer's internal audio output to the EQ input after it loads a file
-            this.wavesurfer.on('load', (url) => {
+            this.wavesurfer.on('ready', () => { // Changed from 'load' to 'ready'
                 if (this.wavesurfer.webAudio && this.wavesurfer.webAudio.gainNode) {
                     this.wavesurfer.webAudio.gainNode.disconnect();
                     this.wavesurfer.webAudio.gainNode.connect(this.eq.high); // Connect Wavesurfer output to EQ high-band input
                 } else {
-                    console.warn(`Deck ${this.deckNumber}: Wavesurfer gainNode not found after load. Check Wavesurfer implementation.`);
+                    console.warn(`Deck ${this.deckNumber}: Wavesurfer gainNode not found after ready. Check Wavesurfer implementation.`);
                 }
-            });
-            
-            this.wavesurfer.on('ready', () => {
                 this.analyzeBPM();
                 // Update play/pause button state only if track is ready
                 this.playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
@@ -198,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // If loading multiple, load the first one to the deck, and add all to playlist
                     this.loadFile(files[0]);
                     for (let i = 0; i < files.length; i++) {
+                        // Check for duplicates before adding to automix queue
                         if (!automixQueue.some(qFile => qFile.name === files[i].name && qFile.size === files[i].size)) {
                             automixQueue.push(files[i]);
                             console.log(`Added "${files[i].name}" to automix queue. Total: ${automixQueue.length} tracks.`);
@@ -326,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             
             this.loopBtn.addEventListener('click', () => {
-                if (this.wavesurfer && this.loopStart !== null && this.loopEnd !== null && this.loopStart < this.loopEnd) {
+                if (this.wavesurfer && this.wavesurfer.getDuration() > 0 && this.loopStart !== null && this.loopEnd !== null && this.loopStart < this.loopEnd) {
                     this.isLooping = !this.isLooping;
                     this.loopBtn.classList.toggle('active', this.isLooping);
                     
@@ -370,6 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (this.isLooping) { // If already looping, update the loop immediately
                             this.wavesurfer.clearRegions();
                             this.wavesurfer.addRegion({ id: 'loop-region', start: this.loopStart, end: this.loopEnd, loop: true, color: 'rgba(255, 0, 0, 0.3)' });
+                            this.updateHotCueMarkers(); // Ensure hot cues are redrawn after updating loop region
                         }
                     } else {
                         console.warn(`Deck ${this.deckNumber}: Loop length (${loopDuration.toFixed(2)}s) exceeds track duration from current position. Adjust loop or track.`);
@@ -462,6 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         async loadFile(file) {
             this.trackInfo.textContent = file.name;
+            this.currentFile = file; // Store the file reference
             
             if (this.wavesurfer) {
                 // Ensure audio context is running before loading
@@ -616,7 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Automix stopped.');
         } else {
             // Check if there are enough tracks for automix to start meaningfully
-            if (automixQueue.length < 2 && (!mixer.decks[0].audioBuffer || !mixer.decks[1].audioBuffer)) {
+            if (automixQueue.length < 2 && (!mixer.decks[0].currentFile && !mixer.decks[1].currentFile)) { // Check currentFile on decks
                  console.warn("Automix requires at least two tracks loaded in the queue or on the decks.");
                  alert("Моля, заредете поне две песни (чрез бутоните 'Load Track' или влачене), за да използвате Automix.");
                  return;
@@ -647,10 +648,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const initialCrossfaderValue = currentActiveDeckIndex === 0 ? 0 : 1;
             document.getElementById('crossfader').value = initialCrossfaderValue;
             mixer.updateCrossfader(initialCrossfaderValue);
-        } else if (!initialActiveDeck.audioBuffer && automixQueue.length > 0) {
+        } else if (!initialActiveDeck.currentFile && automixQueue.length > 0) { // Check initialActiveDeck.currentFile
             // If the initial active deck is empty, try to load from queue
             await loadNextTrackForAutomix(currentActiveDeckIndex);
-            if (initialActiveDeck.audioBuffer) { // If successfully loaded, play it
+            if (initialActiveDeck.currentFile) { // If successfully loaded, play it
                 initialActiveDeck.wavesurfer.play();
                 initialActiveDeck.isPlaying = true;
                 initialActiveDeck.playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
@@ -667,7 +668,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const inactiveDeck = mixer.decks[1 - currentActiveDeckIndex];
             
             // Handle case where active deck is empty or finishes unexpectedly
-            if (!activeDeck.wavesurfer || activeDeck.wavesurfer.getDuration() === 0 || (!activeDeck.isPlaying && activeDeck.wavesurfer.getDuration() > 0 && activeDeck.wavesurfer.getCurrentTime() >= activeDeck.wavesurfer.getDuration() - 0.1)) {
+            // Using currentFile to check if a track is "loaded"
+            if (!activeDeck.currentFile || activeDeck.wavesurfer.getDuration() === 0 || (!activeDeck.isPlaying && activeDeck.wavesurfer.getDuration() > 0 && activeDeck.wavesurfer.getCurrentTime() >= activeDeck.wavesurfer.getDuration() - 0.1)) {
                 console.warn(`Deck ${activeDeck.deckNumber} is empty, finished, or not playing. Attempting to load and play next track.`);
                 activeDeck.wavesurfer.stop(); // Ensure it's stopped
                 activeDeck.isPlaying = false;
@@ -699,7 +701,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // We use `remainingTime > 0.5` to avoid initiating crossfade when track is literally at the very end
             if (remainingTime <= crossfadeDuration + 2 && remainingTime > 0.5) { 
                 // Ensure inactive deck has a track, or try to load the next one
-                if (!inactiveDeck.audioBuffer || inactiveDeck.wavesurfer.getDuration() === 0) {
+                if (!inactiveDeck.currentFile || inactiveDeck.wavesurfer.getDuration() === 0) { // Check inactiveDeck.currentFile
                     console.log(`Deck ${inactiveDeck.deckNumber} needs a track. Loading next from queue...`);
                     const loaded = await loadNextTrackForAutomix(1 - currentActiveDeckIndex); // Load into inactive deck
                     if (!loaded) {
@@ -710,7 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 // If inactive deck has loaded a track and is not already playing
-                if (inactiveDeck.audioBuffer && inactiveDeck.wavesurfer.getDuration() > 0 && !inactiveDeck.isPlaying) {
+                if (inactiveDeck.currentFile && inactiveDeck.wavesurfer.getDuration() > 0 && !inactiveDeck.isPlaying) { // Check inactiveDeck.currentFile
                     console.log(`Starting automix crossfade from Deck ${activeDeck.deckNumber} to Deck ${inactiveDeck.deckNumber}`);
                     
                     inactiveDeck.wavesurfer.play();
@@ -788,7 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const potentialTrack = automixQueue[potentialTrackIndex];
             
             // Check if the potential track is already loaded on the other deck by comparing filename and size
-            if (!otherDeck.audioBuffer || !(potentialTrack.name === otherDeck.trackInfo.textContent && potentialTrack.size === otherDeck.currentFile.size)) {
+            if (!otherDeck.currentFile || !(potentialTrack.name === otherDeck.currentFile.name && potentialTrack.size === otherDeck.currentFile.size)) {
                 nextTrackFile = potentialTrack;
                 automixQueueIndex = (potentialTrackIndex + 1) % automixQueue.length; // Advance index
                 break;

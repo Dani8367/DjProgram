@@ -4,32 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Clone</title>
-    <!-- Връзка към шрифта Roboto от Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS променливи за лесно управление на темите */
+        /* CSS variables for easy theme management */
         :root {
             --primary-bg: #ffffff;
             --secondary-bg: #f2f2f2;
             --search-bg: #f8f9fa;
             --text-color: #202124;
-            --border-color: #dadce0; /* По-мек цвят на рамката */
+            --border-color: #dadce0; /* Softer border color */
             --hover-color: #f0f0f0;
-            --accent-color: #1a73e8; /* Основен акцентен цвят */
+            --accent-color: #1a73e8; /* Main accent color */
             --feedback-bg: #f8f9fa;
             --card-bg: #ffffff;
-            --shadow: 0 1px 6px rgba(32,33,36,0.1); /* По-изразен сянка */
+            --shadow: 0 1px 6px rgba(32,33,36,0.1); /* More pronounced shadow */
             --button-shadow: 0 1px 1px rgba(0,0,0,0.1);
         }
 
-        /* Тъмен режим */
+        /* Dark mode */
         .dark-mode {
             --primary-bg: #202124;
             --secondary-bg: #171717;
             --search-bg: #303134;
             --text-color: #e8eaed;
             --border-color: #5f6368;
-            --hover-color: #3c4043; /* По-тъмен цвят на преместване */
+            --hover-color: #3c4043; /* Darker hover color */
             --accent-color: #8ab4f8;
             --feedback-bg: #303134;
             --card-bg: #303134;
@@ -37,9 +36,9 @@
             --button-shadow: 0 1px 1px rgba(0,0,0,0.3);
         }
 
-        /* Основни стилове на тялото */
+        /* Basic body styles */
         body {
-            font-family: 'Roboto', Arial, sans-serif; /* Използване на Roboto */
+            font-family: 'Roboto', Arial, sans-serif; /* Use Roboto */
             background-color: var(--primary-bg);
             color: var(--text-color);
             margin: 0;
@@ -48,24 +47,24 @@
             display: flex;
             flex-direction: column;
             transition: background-color 0.3s, color 0.3s;
-            line-height: 1.6; /* По-добра четимост */
+            line-height: 1.6; /* Better readability */
         }
         
-        /* Стилизиране на хедъра */
+        /* Header styling */
         .header {
             display: flex;
             justify-content: flex-end;
             align-items: center;
             padding: 16px;
-            gap: 18px; /* По-голямо разстояние между елементите */
+            gap: 18px; /* Larger spacing between elements */
         }
         
-        /* Стилизиране на навигационните връзки */
+        /* Navigation link styling */
         .nav-link {
             text-decoration: none;
             color: var(--text-color);
             font-size: 14px;
-            padding: 8px 12px; /* По-голям тапинг зона */
+            padding: 8px 12px; /* Larger tappable area */
             border-radius: 4px;
             transition: background-color 0.2s, color 0.2s;
         }
@@ -73,14 +72,14 @@
         .nav-link:hover {
             background-color: var(--hover-color);
             color: var(--accent-color);
-            text-decoration: none; /* Премахване на подчертаването при hover */
+            text-decoration: none; /* Remove underline on hover */
         }
 
-        /* Превключвател на тема */
+        /* Theme toggle */
         #themeToggle {
             background: none;
             border: none;
-            font-size: 22px; /* По-голям размер на иконата */
+            font-size: 22px; /* Larger icon size */
             cursor: pointer;
             color: var(--text-color);
             padding: 8px;
@@ -92,7 +91,7 @@
             background-color: var(--hover-color);
         }
         
-        /* Основно съдържание */
+        /* Main content */
         .main-content {
             display: flex;
             flex-direction: column;
@@ -102,9 +101,9 @@
             padding: 20px;
         }
         
-        /* Лого */
+        /* Logo */
         .logo {
-            margin-bottom: 30px; /* По-голямо разстояние */
+            margin-bottom: 30px; /* Larger spacing */
             text-align: center;
         }
 
@@ -115,37 +114,37 @@
         }
 
         .logo:hover img {
-            transform: scale(1.03); /* По-малко увеличение при hover */
+            transform: scale(1.03); /* Smaller hover scale */
         }
         
-        /* Контейнер за търсене */
+        /* Search container */
         .search-container {
             width: 100%;
-            max-width: 600px; /* По-широк контейнер */
+            max-width: 600px; /* Wider container */
             position: relative;
         }
         
-        /* Поле за търсене */
+        /* Search box */
         .search-box {
             display: flex;
             align-items: center;
             border: 1px solid var(--border-color);
-            border-radius: 28px; /* По-заоблени ъгли */
-            padding: 10px 20px; /* По-голям padding */
+            border-radius: 28px; /* More rounded corners */
+            padding: 10px 20px; /* Larger padding */
             margin-bottom: 25px;
             background-color: var(--primary-bg);
-            box-shadow: var(--shadow); /* Прилагане на сянката */
+            box-shadow: var(--shadow); /* Apply shadow */
             transition: box-shadow 0.3s, border-color 0.3s;
         }
         
         .search-box:hover {
-            box-shadow: 0 1px 8px rgba(32,33,36,0.15); /* По-изразена сянка при hover */
+            box-shadow: 0 1px 8px rgba(32,33,36,0.15); /* More pronounced hover shadow */
             border-color: rgba(32,33,36,0.15);
         }
 
         .search-box:focus-within {
             box-shadow: 0 1px 8px rgba(32,33,36,0.2);
-            border-color: var(--accent-color); /* Акцентен цвят при фокус */
+            border-color: var(--accent-color); /* Accent color on focus */
         }
         
         .search-input {
@@ -153,19 +152,19 @@
             border: none;
             outline: none;
             font-size: 16px;
-            padding: 5px 8px; /* Намален padding за input */
+            padding: 5px 8px; /* Reduced input padding */
             background-color: transparent;
             color: var(--text-color);
         }
 
-        /* Предложения за търсене */
+        /* Search suggestions */
         .suggestions {
             position: absolute;
             width: 100%;
             background: var(--primary-bg);
             border: 1px solid var(--border-color);
-            border-top: none; /* Без горна рамка */
-            border-radius: 0 0 12px 12px; /* По-заоблени долни ъгли */
+            border-top: none; /* No top border */
+            border-radius: 0 0 12px 12px; /* More rounded bottom corners */
             box-shadow: var(--shadow);
             z-index: 100;
             display: none;
@@ -174,28 +173,39 @@
         }
 
         .suggestion-item {
-            padding: 12px 20px; /* По-голям padding */
+            padding: 12px 20px; /* Larger padding */
             cursor: pointer;
             transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
         }
 
         .suggestion-item:hover {
             background-color: var(--hover-color);
         }
+
+        .suggestion-icon {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .suggestion-text {
+            flex: 1;
+        }
         
-        /* Бутони за търсене */
+        /* Search buttons */
         .search-buttons {
             display: flex;
             justify-content: center;
-            gap: 15px; /* По-голямо разстояние */
+            gap: 15px; /* Larger spacing */
             margin-bottom: 30px;
         }
         
         .search-btn {
             background-color: var(--search-bg);
             border: 1px solid transparent;
-            border-radius: 6px; /* По-заоблени ъгли */
-            padding: 10px 20px; /* По-голям padding */
+            border-radius: 6px; /* More rounded corners */
+            padding: 10px 20px; /* Larger padding */
             cursor: pointer;
             color: var(--text-color);
             transition: all 0.2s;
@@ -209,23 +219,23 @@
             background-color: var(--hover-color);
         }
 
-        /* Опции за търсене */
+        /* Search options */
         .search-options {
             display: flex;
             justify-content: center;
-            gap: 25px; /* По-голямо разстояние */
+            gap: 25px; /* Larger spacing */
             margin-bottom: 20px;
             font-size: 14px;
             flex-wrap: wrap;
         }
 
-        /* Бързи връзки */
+        /* Quick links */
         .quick-links {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Адаптивни колони */
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Adaptive columns */
             gap: 25px;
             margin-top: 40px;
-            max-width: 700px; /* По-широка зона */
+            max-width: 700px; /* Wider area */
             width: 100%;
         }
 
@@ -235,21 +245,21 @@
             align-items: center;
             text-decoration: none;
             color: var(--text-color);
-            padding: 15px 10px; /* По-голям padding */
-            border-radius: 12px; /* По-заоблени ъгли */
+            padding: 15px 10px; /* Larger padding */
+            border-radius: 12px; /* More rounded corners */
             transition: all 0.2s;
             background-color: var(--card-bg);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Лека сянка */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Slight shadow */
         }
 
         .quick-link:hover {
             background-color: var(--hover-color);
-            transform: translateY(-3px); /* По-изразен ефект */
+            transform: translateY(-3px); /* More pronounced effect */
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .quick-link img {
-            width: 48px; /* По-голям размер на иконите */
+            width: 48px; /* Larger icon size */
             height: 48px;
             margin-bottom: 10px;
             border-radius: 50%;
@@ -259,16 +269,16 @@
         .quick-link span {
             font-size: 13px;
             text-align: center;
-            font-weight: 500; /* По-плътен шрифт */
+            font-weight: 500; /* Bolder font */
         }
 
-        /* Зареждащ индикатор */
+        /* Loader indicator */
         .loader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px; /* По-дебел индикатор */
+            height: 4px; /* Thicker indicator */
             background: linear-gradient(to right, #4285f4, #34a853, #fbbc05, #ea4335);
             background-size: 400% 400%;
             animation: gradient 2s ease infinite;
@@ -282,7 +292,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Падащо меню за история */
+        /* History dropdown */
         .history-dropdown {
             position: absolute;
             background: var(--primary-bg);
@@ -301,6 +311,9 @@
             cursor: pointer;
             border-bottom: 1px solid var(--border-color);
             transition: background-color 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .history-item:hover {
@@ -311,19 +324,47 @@
             border-bottom: none;
         }
 
-        /* Секция за обратна връзка */
+        .history-item-content {
+            flex: 1;
+        }
+
+        .delete-history-item {
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .delete-history-item:hover {
+            color: #ff4444;
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .history-date-group {
+            padding: 8px 15px;
+            background-color: var(--secondary-bg);
+            font-size: 12px;
+            color: var(--text-color);
+            opacity: 0.7;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Feedback section */
         .feedback-section {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            padding: 30px; /* По-голям padding */
+            padding: 30px; /* Larger padding */
             background-color: var(--feedback-bg);
-            border-radius: 12px; /* По-заоблени ъгли */
+            border-radius: 12px; /* More rounded corners */
             width: 90%;
-            max-width: 550px; /* По-широк */
+            max-width: 550px; /* Wider */
             z-index: 1000;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* По-изразена сянка */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* More pronounced shadow */
             display: none;
         }
 
@@ -345,7 +386,7 @@
             width: 100%;
             padding: 12px;
             border: 1px solid var(--border-color);
-            border-radius: 8px; /* По-заоблени ъгли */
+            border-radius: 8px; /* More rounded corners */
             background-color: var(--primary-bg);
             color: var(--text-color);
             resize: vertical;
@@ -366,22 +407,22 @@
         }
 
         .feedback-form button:hover {
-            background-color: #0f5ee3; /* По-тъмен син цвят при hover */
+            background-color: #0f5ee3; /* Darker blue on hover */
         }
 
-        /* Овърлей */
+        /* Overlay */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0,0,0,0.6); /* По-тъмен овърлей */
+            background-color: rgba(0,0,0,0.6); /* Darker overlay */
             z-index: 999;
             display: none;
         }
         
-        /* Фуутър */
+        /* Footer */
         .footer {
             background-color: var(--secondary-bg);
             padding: 18px;
@@ -391,23 +432,23 @@
             justify-content: center;
             gap: 25px;
             flex-wrap: wrap;
-            border-top: 1px solid var(--border-color); /* Лека горна рамка */
+            border-top: 1px solid var(--border-color); /* Light top border */
         }
 
-        /* Модален прозорец за настройки */
+        /* Settings modal */
         .settings-modal {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background-color: var(--card-bg);
-            border-radius: 16px; /* По-заоблени ъгли */
+            border-radius: 16px; /* More rounded corners */
             width: 90%;
-            max-width: 700px; /* По-широк */
+            max-width: 700px; /* Wider */
             max-height: 85vh;
             overflow-y: auto;
             z-index: 1001;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.25); /* По-изразена сянка */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25); /* More pronounced shadow */
             display: none;
             padding: 30px;
         }
@@ -423,7 +464,7 @@
 
         .settings-header h2 {
             margin: 0;
-            font-size: 24px; /* По-голям шрифт */
+            font-size: 24px; /* Larger font */
             color: var(--accent-color);
             font-weight: 500;
         }
@@ -431,7 +472,7 @@
         .close-settings {
             background: none;
             border: none;
-            font-size: 30px; /* По-голям размер на бутона */
+            font-size: 30px; /* Larger button size */
             cursor: pointer;
             color: var(--text-color);
             padding: 5px;
@@ -452,7 +493,7 @@
         .settings-tab {
             padding: 14px 20px;
             cursor: pointer;
-            border-bottom: 3px solid transparent; /* По-дебела долна рамка */
+            border-bottom: 3px solid transparent; /* Thicker bottom border */
             transition: all 0.2s;
             font-weight: 500;
             color: var(--text-color);
@@ -521,12 +562,12 @@
             margin-left: 20px;
         }
 
-        /* Превключвател (Switch) */
+        /* Switch style */
         .switch {
             position: relative;
             display: inline-block;
-            width: 55px; /* По-широк */
-            height: 28px; /* По-висок */
+            width: 55px; /* Wider */
+            height: 28px; /* Taller */
         }
 
         .switch input {
@@ -544,13 +585,13 @@
             bottom: 0;
             background-color: #ccc;
             transition: .4s;
-            border-radius: 28px; /* По-заоблени ъгли */
+            border-radius: 28px; /* More rounded corners */
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 20px; /* По-голям кръг */
+            height: 20px; /* Larger circle */
             width: 20px;
             left: 4px;
             bottom: 4px;
@@ -564,10 +605,10 @@
         }
 
         input:checked + .slider:before {
-            transform: translateX(27px); /* По-голямо преместване */
+            transform: translateX(27px); /* Larger translation */
         }
 
-        /* Стил на падащо меню */
+        /* Select dropdown style */
         .select-style {
             padding: 10px 15px;
             border-radius: 6px;
@@ -576,7 +617,7 @@
             color: var(--text-color);
             min-width: 180px;
             font-size: 15px;
-            appearance: none; /* Премахване на стандартния стил */
+            appearance: none; /* Remove default style */
             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.2-16.1%208.1-3.8%204.9-4.7%2011.6-2.9%2017.7l139.3%20139.3c3.8%203.8%209%205.9%2014.5%205.9s10.7-2.1%2014.5-5.9L289.9%2095.1c3.8-3.8%204.7-10.5%202.9-16.6z%22%2F%3E%3C%2Fsvg%3E');
             background-repeat: no-repeat;
             background-position: right 10px top 50%;
@@ -586,7 +627,7 @@
 
         .radio-group {
             display: flex;
-            flex-direction: column; /* Вертикално подреждане */
+            flex-direction: column; /* Vertical alignment */
             gap: 12px;
         }
 
@@ -600,10 +641,10 @@
         .radio-option input[type="radio"] {
             width: 18px;
             height: 18px;
-            accent-color: var(--accent-color); /* Цвят на радио бутона */
+            accent-color: var(--accent-color); /* Radio button color */
         }
 
-        /* Фуутър на настройките */
+        /* Settings footer */
         .settings-footer {
             display: flex;
             justify-content: flex-end;
@@ -642,7 +683,118 @@
             background-color: var(--hover-color);
         }
 
-        /* Адаптивен дизайн */
+        /* Advanced search modal */
+        .advanced-search-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            z-index: 1001;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            display: none;
+            padding: 25px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+            color: var(--accent-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-color);
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .close-modal:hover {
+            background-color: var(--hover-color);
+        }
+
+        .modal-content {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            font-size: 14px;
+            box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 1px var(--accent-color);
+            outline: none;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Keyboard shortcut hint */
+        .shortcut-hint {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 13px;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            display: none;
+        }
+
+        .shortcut-hint kbd {
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            padding: 2px 5px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 0 3px;
+        }
+
+        /* Responsive design */
         @media (max-width: 768px) {
             .quick-links {
                 grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
@@ -669,6 +821,11 @@
                 padding: 20px;
             }
 
+            .advanced-search-modal {
+                width: 95%;
+                padding: 15px;
+            }
+
             .setting-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -683,6 +840,10 @@
             .select-style {
                 width: 100%;
             }
+
+            .search-buttons {
+                flex-wrap: wrap;
+            }
         }
     </style>
 </head>
@@ -691,26 +852,23 @@
     <div class="overlay" id="overlay"></div>
 
     <header class="header">
-        <!-- Премахнат е уиджетът за времето -->
         <a href="https://mail.google.com" class="nav-link">Gmail</a>
-        <a href="https://www.google.com/imghp" class="nav-link">Изображения</a>
-        <a href="#" class="nav-link" id="feedbackLink">Обратна връзка</a>
+        <a href="https://www.google.com/imghp" class="nav-link">Images</a>
+        <a href="#" class="nav-link" id="feedbackLink">Feedback</a>
         <button id="themeToggle">🌓</button>
     </header>
     
     <main class="main-content">
         <div class="logo">
-            <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Bulglo Search" width="272" height="92" id="logoImage">
+            <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Bulglo Search Logo" width="272" height="92" id="logoImage">
         </div>
         
         <div class="search-container">
             <form id="searchForm" class="search-box">
-                <!-- Икона за търсене -->
                 <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="margin-right: 12px; fill: #9AA0A6;">
                     <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
                 </svg>
-                <input type="text" id="searchInput" class="search-input" placeholder="Търсене в Bulglo или въвеждане на URL" autocomplete="off" autofocus>
-                <!-- Икона за изчистване на търсенето -->
+                <input type="text" id="searchInput" class="search-input" placeholder="Search Bulglo or type a URL" autocomplete="off" autofocus>
                 <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" style="cursor: pointer; margin-left: 12px; fill: #9AA0A6;" id="clearSearch">
                     <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
                 </svg>
@@ -720,12 +878,13 @@
             <div class="history-dropdown" id="historyDropdown"></div>
             
             <div class="search-buttons">
-                <button type="submit" form="searchForm" class="search-btn">Търсене в Bulglo</button>
-                <button type="button" id="feelingLucky" class="search-btn">Чувствам се късметлия</button>
+                <button type="submit" form="searchForm" class="search-btn">Bulglo Search</button>
+                <button type="button" id="feelingLucky" class="search-btn">I'm Feeling Lucky</button>
+                <button type="button" id="advancedSearchBtn" class="search-btn">Advanced Search</button>
             </div>
 
             <div class="search-options">
-                <label><input type="checkbox" id="safeSearch"> Безопасно търсене</label>
+                <label><input type="checkbox" id="safeSearch"> Safe Search</label>
                 <select id="language">
                     <option value="en">English</option>
                     <option value="bg">Български</option>
@@ -737,70 +896,121 @@
         </div>
 
         <div class="quick-links">
-            <a href="https://youtube.com" class="quick-link">
-                <img src="https://www.youtube.com/favicon.ico" alt="YouTube">
+            <a href="https://www.youtube.com/" class="quick-link" target="_blank">
+                <img src="https://www.youtube.com/s/desktop/f172cfd9/img/favicon_96x96.png" alt="YouTube icon">
                 <span>YouTube</span>
             </a>
-            <a href="https://maps.google.com" class="quick-link">
-                <img src="https://www.google.com/maps/favicon.ico" alt="Maps">
-                <span>Карти</span>
+            <a href="https://www.google.com/maps" class="quick-link" target="_blank">
+                <img src="https://www.google.com/images/branding/product/2x/maps_96dp.png" alt="Maps icon">
+                <span>Maps</span>
             </a>
-            <a href="https://drive.google.com" class="quick-link">
-                <img src="https://drive.google.com/favicon.ico" alt="Drive">
-                <span>Диск</span>
+            <a href="https://drive.google.com" class="quick-link" target="_blank">
+                <img src="https://ssl.gstatic.com/images/branding/product/2x/drive_2020q4_96dp.png" alt="Drive icon">
+                <span>Drive</span>
             </a>
-            <a href="https://calendar.google.com" class="quick-link">
-                <img src="https://calendar.google.com/favicon.ico" alt="Calendar">
-                <span>Календар</span>
+            <a href="https://calendar.google.com" class="quick-link" target="_blank">
+                <img src="https://ssl.gstatic.com/calendar/images/favicon_2020q4_96dp.png" alt="Calendar icon">
+                <span>Calendar</span>
             </a>
-            <a href="https://translate.google.com" class="quick-link">
-                <img src="https://translate.google.com/favicon.ico" alt="Translate">
-                <span>Преводач</span>
+            <a href="https://translate.google.com" class="quick-link" target="_blank">
+                <img src="https://ssl.gstatic.com/translate/favicon.ico" alt="Translate icon">
+                <span>Translate</span>
             </a>
         </div>
 
         <div class="feedback-section" id="feedbackSection">
-            <h3>Помогнете ни да подобрим Google Clone</h3>
+            <h3>Help Us Improve Google Clone</h3>
             <form class="feedback-form" id="feedbackForm">
-                <textarea placeholder="Вашата обратна връзка..." required></textarea>
-                <button type="submit">Изпрати</button>
+                <textarea placeholder="Your feedback..." required></textarea>
+                <button type="submit">Send</button>
             </form>
         </div>
 
-        <!-- Нов модален прозорец за настройки -->
+        <div class="advanced-search-modal" id="advancedSearchModal">
+            <div class="modal-header">
+                <h3>Advanced Search</h3>
+                <button class="close-modal" id="closeAdvancedSearch">×</button>
+            </div>
+            <div class="modal-content">
+                <form id="advancedSearchForm">
+                    <div class="form-group">
+                        <label for="allWords">All these words:</label>
+                        <input type="text" id="allWords" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="exactPhrase">Exact phrase:</label>
+                        <input type="text" id="exactPhrase" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="anyWords">Any of these words:</label>
+                        <input type="text" id="anyWords" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="noneWords">None of these words:</label>
+                        <input type="text" id="noneWords" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="fileType">File type:</label>
+                        <select id="fileType" class="form-select">
+                            <option value="">Any format</option>
+                            <option value="pdf">PDF</option>
+                            <option value="doc">DOC/DOCX</option>
+                            <option value="xls">XLS/XLSX</option>
+                            <option value="ppt">PPT/PPTX</option>
+                            <option value="txt">Text</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeRange">Time range:</label>
+                        <select id="timeRange" class="form-select">
+                            <option value="">Any time</option>
+                            <option value="d">Last 24 hours</option>
+                            <option value="w">Last week</option>
+                            <option value="m">Last month</option>
+                            <option value="y">Last year</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelAdvancedSearch">Cancel</button>
+                <button class="btn btn-primary" id="applyAdvancedSearch">Apply Filters</button>
+            </div>
+        </div>
+
         <div class="settings-modal" id="settingsModal">
             <div class="settings-header">
-                <h2>Настройки</h2>
-                <button class="close-settings" id="closeSettings">&times;</button>
+                <h2>Settings</h2>
+                <button class="close-settings" id="closeSettings">×</button>
             </div>
             
             <div class="settings-tabs">
-                <div class="settings-tab active" data-tab="general">Общи</div>
-                <div class="settings-tab" data-tab="search">Търсене</div>
-                <div class="settings-tab" data-tab="privacy">Поверителност</div>
+                <div class="settings-tab active" data-tab="general">General</div>
+                <div class="settings-tab" data-tab="search">Search</div>
+                <div class="settings-tab" data-tab="privacy">Privacy</div>
             </div>
             
             <div class="settings-content active" id="generalTab">
                 <div class="settings-group">
-                    <h3>Външен вид</h3>
+                    <h3>Appearance</h3>
                     <div class="setting-item">
                         <div class="setting-label">
-                            <h4>Тема</h4>
-                            <p>Изберете между светъл, тъмен или системен режим</p>
+                            <h4>Theme</h4>
+                            <p>Choose between light, dark, or system mode</p>
                         </div>
                         <div class="setting-control">
                             <div class="radio-group">
                                 <label class="radio-option">
                                     <input type="radio" name="appTheme" value="system" id="themeSystem">
-                                    Системна
+                                    System
                                 </label>
                                 <label class="radio-option">
                                     <input type="radio" name="appTheme" value="light" id="themeLight">
-                                    Светла
+                                    Light
                                 </label>
                                 <label class="radio-option">
                                     <input type="radio" name="appTheme" value="dark" id="themeDark">
-                                    Тъмна
+                                    Dark
                                 </label>
                             </div>
                         </div>
@@ -808,11 +1018,11 @@
                 </div>
                 
                 <div class="settings-group">
-                    <h3>Език и регион</h3>
+                    <h3>Language & Region</h3>
                     <div class="setting-item">
                         <div class="setting-label">
-                            <h4>Език на показване</h4>
-                            <p>Променете езика, използван в интерфейса</p>
+                            <h4>Display Language</h4>
+                            <p>Change the language used in the interface</p>
                         </div>
                         <div class="setting-control">
                             <select id="settingsLanguage" class="select-style">
@@ -829,11 +1039,11 @@
             
             <div class="settings-content" id="searchTab">
                 <div class="settings-group">
-                    <h3>Настройки за търсене</h3>
+                    <h3>Search Settings</h3>
                     <div class="setting-item">
                         <div class="setting-label">
-                            <h4>Безопасно търсене</h4>
-                            <p>Филтрирайте изрични резултати от вашите търсения</p>
+                            <h4>Safe Search</h4>
+                            <p>Filter explicit results from your searches</p>
                         </div>
                         <div class="setting-control">
                             <label class="switch">
@@ -845,33 +1055,33 @@
                     
                     <div class="setting-item">
                         <div class="setting-label">
-                            <h4>Резултати от търсене на страница</h4>
-                            <p>Брой резултати, показвани на всяка страница</p>
+                            <h4>Results per page</h4>
+                            <p>Number of results shown on each page</p>
                         </div>
                         <div class="setting-control">
                             <select id="resultsPerPage" class="select-style">
-                                <option value="10">10 резултата</option>
-                                <option value="20">20 резултата</option>
-                                <option value="30">30 резултата</option>
-                                <option value="50">50 резултата</option>
+                                <option value="10">10 results</option>
+                                <option value="20">20 results</option>
+                                <option value="30">30 results</option>
+                                <option value="50">50 results</option>
                             </select>
                         </div>
                     </div>
                     
                     <div class="setting-item">
                         <div class="setting-label">
-                            <h4>Режим на търсене по подразбиране</h4>
-                            <p>Изберете предпочитаното си поведение при търсене</p>
+                            <h4>Default Search Mode</h4>
+                            <p>Choose your preferred search behavior</p>
                         </div>
                         <div class="setting-control">
                             <div class="radio-group">
                                 <label class="radio-option">
                                     <input type="radio" name="searchMode" value="standard" checked>
-                                    Стандартно търсене
+                                    Standard Search
                                 </label>
                                 <label class="radio-option">
                                     <input type="radio" name="searchMode" value="instant">
-                                    Незабавни резултати
+                                    Instant Results
                                 </label>
                             </div>
                         </div>
@@ -879,11 +1089,11 @@
                 </div>
                 
                 <div class="settings-group">
-                    <h3>История на търсенето</h3>
+                    <h3>Search History</h3>
                     <div class="setting-item">
                         <div class="setting-label">
-                            <h4>Запазване на историята на търсенето</h4>
-                            <p>Съхранявайте предишните си търсения за бърз достъп</p>
+                            <h4>Save Search History</h4>
+                            <p>Store your previous searches for quick access</p>
                         </div>
                         <div class="setting-control">
                             <label class="switch">
@@ -897,11 +1107,11 @@
             
             <div class="settings-content" id="privacyTab">
                 <div class="settings-group">
-                    <h3>Настройки за поверителност</h3>
+                    <h3>Privacy Settings</h3>
                     <div class="setting-item">
                         <div class="setting-label">
-                            <h4>Персонализирани реклами</h4>
-                            <p>Показване на реклами въз основа на вашите интереси и история на търсенето</p>
+                            <h4>Personalized Ads</h4>
+                            <p>Show ads based on your interests and search history</p>
                         </div>
                         <div class="setting-control">
                             <label class="switch">
@@ -913,8 +1123,8 @@
                     
                     <div class="setting-item">
                         <div class="setting-label">
-                            <h4>Услуги за местоположение</h4>
-                            <p>Разрешаване на уебсайтове да имат достъп до вашето местоположение за по-добри резултати</p>
+                            <h4>Location Services</h4>
+                            <p>Allow websites to access your location for better results</p>
                         </div>
                         <div class="setting-control">
                             <label class="switch">
@@ -926,46 +1136,50 @@
                 </div>
                 
                 <div class="settings-group">
-                    <h3>Данни и бисквитки</h3>
+                    <h3>Data & Cookies</h3>
                     <div class="setting-item">
                         <div class="setting-label">
-                            <h4>Изчистване на историята на търсенето</h4>
-                            <p>Изтрийте всичките си предишно запазени търсения</p>
+                            <h4>Clear Search History</h4>
+                            <p>Delete all your previously saved searches</p>
                         </div>
                         <div class="setting-control">
-                            <button class="btn btn-secondary" id="clearHistoryBtn">Изчисти историята</button>
+                            <button class="btn btn-secondary" id="clearHistoryBtnModal">Clear History</button>
                         </div>
                     </div>
                     
                     <div class="setting-item">
                         <div class="setting-label">
-                            <h4>Изчистване на бисквитките</h4>
-                            <p>Премахнете всички запазени бисквитки и данни за сайта</p>
+                            <h4>Clear Cookies</h4>
+                            <p>Remove all saved cookies and site data</p>
                         </div>
                         <div class="setting-control">
-                            <button class="btn btn-secondary" id="clearCookiesBtn">Изчисти бисквитките</button>
+                            <button class="btn btn-secondary" id="clearCookiesBtn">Clear Cookies</button>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="settings-footer">
-                <button class="btn btn-secondary" id="cancelSettings">Отказ</button>
-                <button class="btn btn-primary" id="saveSettings">Запази промените</button>
+                <button class="btn btn-secondary" id="cancelSettings">Cancel</button>
+                <button class="btn btn-primary" id="saveSettings">Save Changes</button>
             </div>
+        </div>
+
+        <div class="shortcut-hint" id="shortcutHint">
+            Press <kbd>Ctrl</kbd> + <kbd>K</kbd> for quick search
         </div>
     </main>
     
     <footer class="footer">
-        <a href="https://policies.google.com/privacy" class="nav-link">Поверителност</a>
-        <a href="https://policies.google.com/terms" class="nav-link">Условия</a>
-        <a href="#" id="clearHistory" class="nav-link">Изчисти историята</a>
-        <a href="#" id="settings" class="nav-link">Настройки</a>
+        <a href="https://policies.google.com/privacy" class="nav-link">Privacy</a>
+        <a href="https://policies.google.com/terms" class="nav-link">Terms</a>
+        <a href="#" id="clearHistoryFooter" class="nav-link">Clear History</a>
+        <a href="#" id="settings" class="nav-link">Settings</a>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // DOM елементи
+            // DOM elements
             const searchForm = document.getElementById('searchForm');
             const searchInput = document.getElementById('searchInput');
             const feelingLuckyBtn = document.getElementById('feelingLucky');
@@ -977,15 +1191,24 @@
             const safeSearch = document.getElementById('safeSearch');
             const languageSelect = document.getElementById('language');
             const historyDropdown = document.getElementById('historyDropdown');
-            const clearHistoryBtn = document.getElementById('clearHistory');
+            const clearHistoryFooterBtn = document.getElementById('clearHistoryFooter'); // Renamed for clarity
             const quickLinks = document.querySelectorAll('.quick-link');
             const feedbackLink = document.getElementById('feedbackLink');
             const feedbackSection = document.getElementById('feedbackSection');
             const feedbackForm = document.getElementById('feedbackForm');
             const settingsBtn = document.getElementById('settings');
             const overlay = document.getElementById('overlay');
+            const shortcutHint = document.getElementById('shortcutHint');
             
-            // Нови елементи на модалния прозорец за настройки
+            // Advanced search elements
+            const advancedSearchBtn = document.getElementById('advancedSearchBtn');
+            const advancedSearchModal = document.getElementById('advancedSearchModal');
+            const closeAdvancedSearchBtn = document.getElementById('closeAdvancedSearch');
+            const cancelAdvancedSearchBtn = document.getElementById('cancelAdvancedSearch');
+            const applyAdvancedSearchBtn = document.getElementById('applyAdvancedSearch');
+            const advancedSearchForm = document.getElementById('advancedSearchForm');
+            
+            // Settings elements
             const settingsModal = document.getElementById('settingsModal');
             const closeSettingsBtn = document.getElementById('closeSettings');
             const cancelSettingsBtn = document.getElementById('cancelSettings');
@@ -993,7 +1216,7 @@
             const settingsTabs = document.querySelectorAll('.settings-tab');
             const settingsContents = document.querySelectorAll('.settings-content');
             
-            // Елементи за избор на тема
+            // Theme selection elements
             const themeRadioButtons = document.querySelectorAll('input[name="appTheme"]');
             const themeSystem = document.getElementById('themeSystem');
             const themeLight = document.getElementById('themeLight');
@@ -1005,31 +1228,31 @@
             const locationServicesSwitch = document.getElementById('locationServicesSwitch');
             const settingsLanguage = document.getElementById('settingsLanguage');
             const resultsPerPage = document.getElementById('resultsPerPage');
-            const clearHistoryBtnModal = document.getElementById('clearHistoryBtn');
+            const clearHistoryBtnModal = document.getElementById('clearHistoryBtnModal'); // Corrected ID
             const clearCookiesBtn = document.getElementById('clearCookiesBtn');
 
-            // Media query за предпочитана цветова схема на системата
+            // Media query for system color scheme preference
             const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-            // Инициализиране на темата от localStorage или системните предпочитания
+            // Initialize theme from localStorage or system preferences
             function initializeTheme() {
                 let storedThemePreference = localStorage.getItem('themePreference') || 'system';
                 
-                // Проверяваме радио бутоните в настройките
+                // Check radio buttons in settings
                 if (storedThemePreference === 'system') {
-                    themeSystem.checked = true;
+                    if (themeSystem) themeSystem.checked = true; // Added check for element existence
                     applyTheme(prefersDarkScheme.matches ? 'dark' : 'light');
                 } else if (storedThemePreference === 'light') {
-                    themeLight.checked = true;
+                    if (themeLight) themeLight.checked = true; // Added check for element existence
                     applyTheme('light');
                 } else { // 'dark'
-                    themeDark.checked = true;
+                    if (themeDark) themeDark.checked = true; // Added check for element existence
                     applyTheme('dark');
                 }
                 updateThemeToggleButtonIcon();
             }
 
-            // Прилагане на темата
+            // Apply theme
             function applyTheme(mode) {
                 if (mode === 'dark') {
                     document.body.classList.add('dark-mode');
@@ -1038,17 +1261,17 @@
                 }
             }
 
-            // Актуализиране на иконата на бутона за превключване на тема
+            // Update theme toggle button icon
             function updateThemeToggleButtonIcon() {
                 const currentTheme = localStorage.getItem('themePreference') || 'system';
                 if (currentTheme === 'dark' || (currentTheme === 'system' && prefersDarkScheme.matches)) {
-                    themeToggle.textContent = '☀️'; // Слънце за тъмен режим
+                    themeToggle.textContent = '☀️'; // Sun for dark mode
                 } else {
-                    themeToggle.textContent = '🌓'; // Полумесец за светъл режим
+                    themeToggle.textContent = '🌓'; // Half moon for light mode
                 }
             }
 
-            // Слушател за промени в системните предпочитания за цвят
+            // Listener for changes in system color preference
             prefersDarkScheme.addEventListener('change', (e) => {
                 if (localStorage.getItem('themePreference') === 'system') {
                     applyTheme(e.matches ? 'dark' : 'light');
@@ -1056,42 +1279,53 @@
                 }
             });
 
-            // Инициализиране на темата при зареждане на страницата
+            // Initialize theme on page load
             initializeTheme();
 
-            // Инициализиране на езика от localStorage
+            // Initialize language from localStorage
             if (localStorage.getItem('language')) {
-                languageSelect.value = localStorage.getItem('language');
-                settingsLanguage.value = localStorage.getItem('language');
+                if (languageSelect) languageSelect.value = localStorage.getItem('language');
+                if (settingsLanguage) settingsLanguage.value = localStorage.getItem('language');
             }
 
-            // Инициализиране на безопасно търсене от localStorage
+            // Initialize safe search from localStorage
             if (localStorage.getItem('safeSearch') === 'true') {
-                safeSearch.checked = true;
-                safeSearchSwitch.checked = true;
+                if (safeSearch) safeSearch.checked = true;
+                if (safeSearchSwitch) safeSearchSwitch.checked = true;
             }
 
-            // Инициализиране на настройката за история на търсенето
+            // Initialize search history setting
             if (localStorage.getItem('saveHistory') === 'false') {
-                saveHistorySwitch.checked = false;
+                if (saveHistorySwitch) saveHistorySwitch.checked = false;
             } else {
-                saveHistorySwitch.checked = true;
+                if (saveHistorySwitch) saveHistorySwitch.checked = true;
             }
 
-            // Инициализиране на резултатите на страница
+            // Initialize results per page
             if (localStorage.getItem('resultsPerPage')) {
-                resultsPerPage.value = localStorage.getItem('resultsPerPage');
+                if (resultsPerPage) resultsPerPage.value = localStorage.getItem('resultsPerPage');
             }
 
-            // Инициализиране на режима на търсене
+            // Initialize search mode
             if (localStorage.getItem('searchMode')) {
-                document.querySelector(`input[name="searchMode"][value="${localStorage.getItem('searchMode')}"]`).checked = true;
+                const searchModeRadio = document.querySelector(`input[name="searchMode"][value="${localStorage.getItem('searchMode')}"]`);
+                if (searchModeRadio) searchModeRadio.checked = true;
             }
 
-            // Зареждане на историята на търсенето
+            // Load search history
             loadSearchHistory();
 
-            // Превключване на тема чрез бутона в хедъра
+            // Show keyboard shortcut hint on search input focus
+            searchInput.addEventListener('focus', function() {
+                if (shortcutHint) {
+                    shortcutHint.style.display = 'block';
+                    setTimeout(() => {
+                        shortcutHint.style.display = 'none';
+                    }, 3000);
+                }
+            });
+
+            // Toggle theme via header button
             themeToggle.addEventListener('click', function() {
                 let currentPreference = localStorage.getItem('themePreference') || 'system';
                 let newPreference;
@@ -1105,42 +1339,45 @@
                 }
                 localStorage.setItem('themePreference', newPreference);
                 
-                // Актуализираме радио бутоните в настройките
-                document.getElementById(`theme${newPreference.charAt(0).toUpperCase() + newPreference.slice(1)}`).checked = true;
+                // Update radio buttons in settings
+                const newThemeRadio = document.getElementById(`theme${newPreference.charAt(0).toUpperCase() + newPreference.slice(1)}`);
+                if (newThemeRadio) newThemeRadio.checked = true;
                 
-                initializeTheme(); // Прилагаме новата тема
+                initializeTheme(); // Apply new theme
             });
 
-            // Слушатели за промяна на радио бутоните за тема в настройките
+            // Listeners for theme radio button changes in settings
             themeRadioButtons.forEach(radio => {
                 radio.addEventListener('change', function() {
                     localStorage.setItem('themePreference', this.value);
-                    initializeTheme(); // Прилагаме новата тема
+                    initializeTheme(); // Apply new theme
                 });
             });
 
-            // Изчистване на входящото поле за търсене
+            // Clear search input field
             clearIcon.addEventListener('click', function() {
                 searchInput.value = '';
                 searchInput.focus();
                 suggestionsBox.style.display = 'none';
+                historyDropdown.style.display = 'none'; // Ensure history is hidden when clearing input
             });
 
-            // Показване на историята на търсенето, когато полето е на фокус
+            // Show search history when input field is focused and empty
             searchInput.addEventListener('focus', function() {
                 if (searchInput.value === '') {
                     showSearchHistory();
                 }
             });
 
-            // Скриване на историята при клик извън полето
+            // Hide history and suggestions on click outside
             document.addEventListener('click', function(e) {
-                if (!searchInput.contains(e.target) && !historyDropdown.contains(e.target)) {
+                if (!searchInput.contains(e.target) && !historyDropdown.contains(e.target) && !suggestionsBox.contains(e.target)) {
                     historyDropdown.style.display = 'none';
+                    suggestionsBox.style.display = 'none';
                 }
             });
 
-            // Обработка на изпращане на формуляра за търсене
+            // Handle search form submission
             searchForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const query = searchInput.value.trim();
@@ -1149,17 +1386,63 @@
                 }
             });
 
-            // Обработка на бутона "Чувствам се късметлия"
+            // Handle "I'm Feeling Lucky" button
             feelingLuckyBtn.addEventListener('click', function() {
                 const query = searchInput.value.trim();
                 if (query) {
                     saveToHistory(query);
                     showLoader();
-                    window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}&btnI=I'm+Feeling+Lucky${getSearchOptions()}`;
+                    // Open in new tab for external link consistency
+                    window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}&btnI=I'm+Feeling+Lucky${getSearchOptions()}`, '_blank');
                 }
             });
 
-            // Обработка на натискане на Enter в полето за търсене
+            // Handle Advanced Search button
+            if (advancedSearchBtn) advancedSearchBtn.addEventListener('click', openAdvancedSearch);
+            if (closeAdvancedSearchBtn) closeAdvancedSearchBtn.addEventListener('click', closeAdvancedSearch);
+            if (cancelAdvancedSearchBtn) cancelAdvancedSearchBtn.addEventListener('click', closeAdvancedSearch);
+            // Only close modals/overlays if the click is directly on the overlay
+            if (overlay) {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        closeAdvancedSearch();
+                        closeFeedback();
+                        closeSettings();
+                    }
+                });
+            }
+
+            if (applyAdvancedSearchBtn) {
+                applyAdvancedSearchBtn.addEventListener('click', function() {
+                    const allWords = document.getElementById('allWords')?.value.trim() || '';
+                    const exactPhrase = document.getElementById('exactPhrase')?.value.trim() || '';
+                    const anyWords = document.getElementById('anyWords')?.value.trim() || '';
+                    const noneWords = document.getElementById('noneWords')?.value.trim() || '';
+                    const fileType = document.getElementById('fileType')?.value || '';
+                    const timeRange = document.getElementById('timeRange')?.value || '';
+                    
+                    let queryParts = [];
+                    
+                    if (allWords) queryParts.push(allWords.split(' ').join(' '));
+                    if (exactPhrase) queryParts.push(`"${exactPhrase}"`);
+                    if (anyWords) queryParts.push(anyWords.split(' ').join(' OR '));
+                    if (noneWords) queryParts.push(noneWords.split(' ').map(word => `-${word}`).join(' '));
+                    
+                    const advancedQuery = queryParts.join(' ');
+                    searchInput.value = advancedQuery;
+                    
+                    // Save additional parameters to localStorage
+                    if (fileType) localStorage.setItem('fileType', fileType);
+                    else localStorage.removeItem('fileType'); // Clear if empty
+                    if (timeRange) localStorage.setItem('timeRange', timeRange);
+                    else localStorage.removeItem('timeRange'); // Clear if empty
+                    
+                    closeAdvancedSearch();
+                    searchInput.focus();
+                });
+            }
+
+            // Handle Enter key press in search input
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -1170,7 +1453,7 @@
                 }
             });
 
-            // Клавишни комбинации
+            // Keyboard shortcuts
             document.addEventListener('keydown', function(e) {
                 if (e.ctrlKey && e.key === 'k') {
                     e.preventDefault();
@@ -1182,10 +1465,11 @@
                     historyDropdown.style.display = 'none';
                     closeFeedback();
                     closeSettings();
+                    closeAdvancedSearch();
                 }
             });
 
-            // Предложения за автоматично довършване
+            // Autocomplete suggestions
             searchInput.addEventListener('input', async function() {
                 const query = this.value.trim();
                 
@@ -1203,149 +1487,181 @@
                 }
             });
 
-            // Промяна на безопасно търсене и език
-            safeSearch.addEventListener('change', function() {
-                localStorage.setItem('safeSearch', this.checked);
-                safeSearchSwitch.checked = this.checked;
-            });
+            // Change safe search and language
+            if (safeSearch) {
+                safeSearch.addEventListener('change', function() {
+                    localStorage.setItem('safeSearch', this.checked);
+                    if (safeSearchSwitch) safeSearchSwitch.checked = this.checked;
+                });
+            }
 
-            safeSearchSwitch.addEventListener('change', function() {
-                localStorage.setItem('safeSearch', this.checked);
-                safeSearch.checked = this.checked;
-            });
+            if (safeSearchSwitch) {
+                safeSearchSwitch.addEventListener('change', function() {
+                    localStorage.setItem('safeSearch', this.checked);
+                    if (safeSearch) safeSearch.checked = this.checked;
+                });
+            }
 
-            languageSelect.addEventListener('change', function() {
-                localStorage.setItem('language', this.value);
-                settingsLanguage.value = this.value;
-            });
+            if (languageSelect) {
+                languageSelect.addEventListener('change', function() {
+                    localStorage.setItem('language', this.value);
+                    if (settingsLanguage) settingsLanguage.value = this.value;
+                });
+            }
 
-            settingsLanguage.addEventListener('change', function() {
-                localStorage.setItem('language', this.value);
-                languageSelect.value = this.value;
-            });
+            if (settingsLanguage) {
+                settingsLanguage.addEventListener('change', function() {
+                    localStorage.setItem('language', this.value);
+                    if (languageSelect) languageSelect.value = this.value;
+                });
+            }
 
-            // Бутон за изчистване на историята
-            clearHistoryBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                // Използване на confirm за потвърждение (в реално приложение би било персонализиран модал)
-                if (confirm('Сигурни ли сте, че искате да изчистите историята си на търсене?')) {
-                    clearSearchHistory();
-                }
-            });
+            // Clear history button (footer)
+            if (clearHistoryFooterBtn) {
+                clearHistoryFooterBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to clear your search history?')) {
+                        clearSearchHistory();
+                    }
+                });
+            }
 
-            clearHistoryBtnModal.addEventListener('click', function(e) {
-                e.preventDefault();
-                // Използване на confirm за потвърждение (в реално приложение би било персонализиран модал)
-                if (confirm('Сигурни ли сте, че искате да изчистите историята си на търсене?')) {
-                    clearSearchHistory();
-                }
-            });
+            // Clear history button (modal)
+            if (clearHistoryBtnModal) {
+                clearHistoryBtnModal.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to clear your search history?')) {
+                        clearSearchHistory();
+                    }
+                });
+            }
 
             function clearSearchHistory() {
                 localStorage.removeItem('searchHistory');
                 historyDropdown.style.display = 'none';
-                showToast('Историята на търсенето е изчистена');
+                showToast('Search history cleared');
             }
 
-            // Бутон за изчистване на бисквитките
-            clearCookiesBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                // В реално приложение, тук бихте изчистили бисквитките
-                // Използване на confirm за потвърждение (в реално приложение би било персонализиран модал)
-                if (confirm('Сигурни ли сте, че искате да изчистите всички бисквитки и данни за сайта?')) {
-                    showToast('Бисквитките и данните за сайта са изчистени');
-                }
-            });
+            // Clear cookies button (modal)
+            if (clearCookiesBtn) {
+                clearCookiesBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (confirm('Are you sure you want to clear all cookies and site data?')) {
+                        // In a real application, you would handle cookie clearing here
+                        // For demonstration, we'll just show a toast.
+                        // window.location.reload(true) might clear some session cookies, but not all.
+                        showToast('Cookies and site data cleared (simulated)');
+                    }
+                });
+            }
 
-            // Анимация на бързите връзки
+            // Quick links animation
             quickLinks.forEach(link => {
                 link.addEventListener('mouseenter', function() {
-                    this.querySelector('img').style.transform = 'scale(1.1)';
+                    const img = this.querySelector('img');
+                    if (img) img.style.transform = 'scale(1.1)';
                 });
                 link.addEventListener('mouseleave', function() {
-                    this.querySelector('img').style.transform = 'scale(1)';
+                    const img = this.querySelector('img');
+                    if (img) img.style.transform = 'scale(1)';
                 });
             });
 
-            // Връзка за обратна връзка
-            feedbackLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                openFeedback();
-            });
+            // Feedback link
+            if (feedbackLink) {
+                feedbackLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openFeedback();
+                });
+            }
 
-            // Изпращане на формуляра за обратна връзка
-            feedbackForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const feedbackText = this.querySelector('textarea').value.trim();
-                if (feedbackText) {
-                    // В реално приложение, това би било изпратено към вашия сървър
-                    console.log('Изпратена обратна връзка:', feedbackText);
-                    this.querySelector('textarea').value = '';
-                    closeFeedback();
-                    showToast('Благодарим ви за обратната връзка!');
-                }
-            });
+            // Submit feedback form
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const feedbackTextarea = this.querySelector('textarea');
+                    const feedbackText = feedbackTextarea ? feedbackTextarea.value.trim() : '';
+                    if (feedbackText) {
+                        console.log('Feedback submitted:', feedbackText);
+                        if (feedbackTextarea) feedbackTextarea.value = '';
+                        closeFeedback();
+                        showToast('Thank you for your feedback!');
+                    }
+                });
+            }
 
-            // Бутон за настройки
-            settingsBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                openSettings();
-            });
+            // Settings button
+            if (settingsBtn) {
+                settingsBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openSettings();
+                });
+            }
 
-            // Затваряне на настройките
-            closeSettingsBtn.addEventListener('click', closeSettings);
-            cancelSettingsBtn.addEventListener('click', closeSettings);
-            overlay.addEventListener('click', closeSettings); // Затваряне при клик върху овърлея
+            // Close settings
+            if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', closeSettings);
+            if (cancelSettingsBtn) cancelSettingsBtn.addEventListener('click', closeSettings);
 
-            // Запазване на настройките
-            saveSettingsBtn.addEventListener('click', function() {
-                localStorage.setItem('saveHistory', saveHistorySwitch.checked);
-                localStorage.setItem('personalizedAds', personalizedAdsSwitch.checked);
-                localStorage.setItem('locationServices', locationServicesSwitch.checked);
-                localStorage.setItem('resultsPerPage', resultsPerPage.value);
-                localStorage.setItem('searchMode', document.querySelector('input[name="searchMode"]:checked').value);
-                
-                showToast('Настройките са запазени успешно');
-                closeSettings();
-            });
+            // Save settings
+            if (saveSettingsBtn) {
+                saveSettingsBtn.addEventListener('click', function() {
+                    if (saveHistorySwitch) localStorage.setItem('saveHistory', saveHistorySwitch.checked);
+                    if (personalizedAdsSwitch) localStorage.setItem('personalizedAds', personalizedAdsSwitch.checked); // Assuming these exist
+                    if (locationServicesSwitch) localStorage.setItem('locationServices', locationServicesSwitch.checked); // Assuming these exist
+                    if (resultsPerPage) localStorage.setItem('resultsPerPage', resultsPerPage.value);
+                    const selectedSearchMode = document.querySelector('input[name="searchMode"]:checked');
+                    if (selectedSearchMode) localStorage.setItem('searchMode', selectedSearchMode.value);
+                    
+                    showToast('Settings saved successfully');
+                    closeSettings();
+                });
+            }
 
-            // Табове за настройки
+            // Settings tabs
             settingsTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabId = this.getAttribute('data-tab');
                     
-                    // Премахване на активен клас от всички табове и съдържание
+                    // Remove active class from all tabs and content
                     settingsTabs.forEach(t => t.classList.remove('active'));
                     settingsContents.forEach(c => c.classList.remove('active'));
                     
-                    // Добавяне на активен клас към кликнатия таб и съответното съдържание
+                    // Add active class to clicked tab and corresponding content
                     this.classList.add('active');
-                    document.getElementById(`${tabId}Tab`).classList.add('active');
+                    const targetContent = document.getElementById(`${tabId}Tab`);
+                    if (targetContent) targetContent.classList.add('active');
                 });
             });
 
-            // Затваряне на обратна връзка при клик върху овърлея
-            overlay.addEventListener('click', closeFeedback);
+            // Functions
+            function openAdvancedSearch() {
+                if (advancedSearchModal) advancedSearchModal.style.display = 'block';
+                if (overlay) overlay.style.display = 'block';
+            }
 
-            // Функции
+            function closeAdvancedSearch() {
+                if (advancedSearchModal) advancedSearchModal.style.display = 'none';
+                if (overlay) overlay.style.display = 'none';
+            }
+
             function openSettings() {
-                settingsModal.style.display = 'block';
-                overlay.style.display = 'block';
+                if (settingsModal) settingsModal.style.display = 'block';
+                if (overlay) overlay.style.display = 'block';
             }
 
             function closeSettings() {
-                settingsModal.style.display = 'none';
-                overlay.style.display = 'none';
+                if (settingsModal) settingsModal.style.display = 'none';
+                if (overlay) overlay.style.display = 'none';
             }
 
             function openFeedback() {
-                feedbackSection.style.display = 'block';
-                overlay.style.display = 'block';
+                if (feedbackSection) feedbackSection.style.display = 'block';
+                if (overlay) overlay.style.display = 'block';
             }
 
             function closeFeedback() {
-                feedbackSection.style.display = 'none';
-                overlay.style.display = 'none';
+                if (feedbackSection) feedbackSection.style.display = 'none';
+                if (overlay) overlay.style.display = 'none';
             }
 
             async function fetchSuggestions(query) {
@@ -1354,63 +1670,115 @@
                     const data = await response.json();
                     return data[1];
                 } catch (error) {
-                    console.error('Грешка при извличане на предложения:', error);
+                    console.error('Error fetching suggestions:', error);
                     return [];
                 }
             }
 
             function showSuggestions(suggestions) {
-                if (suggestions.length === 0) {
-                    suggestionsBox.style.display = 'none';
-                    return;
-                }
+                if (suggestionsBox) {
+                    suggestionsBox.innerHTML = '';
+                    
+                    // Add history suggestions if input matches
+                    const history = loadSearchHistory();
+                    const currentInputValue = searchInput.value.toLowerCase();
+                    const historySuggestions = history.filter(item => 
+                        item.toLowerCase().includes(currentInputValue) && 
+                        !suggestions.some(s => s.toLowerCase() === item.toLowerCase()) // Avoid duplicates from API
+                    ).slice(0, 3); // Limit history suggestions
 
-                suggestionsBox.innerHTML = '';
-                suggestions.forEach(suggestion => {
+                    if (historySuggestions.length > 0) {
+                        const historyHeader = document.createElement('div');
+                        historyHeader.className = 'history-date-group';
+                        historyHeader.textContent = 'From History';
+                        suggestionsBox.appendChild(historyHeader);
+                        
+                        historySuggestions.forEach(suggestion => {
+                            addSuggestionItem(suggestion, 'history');
+                        });
+                    }
+
+                    // Add suggestions from Google
+                    suggestions.forEach(suggestion => {
+                        addSuggestionItem(suggestion, 'search');
+                    });
+
+                    if (suggestions.length > 0 || historySuggestions.length > 0) {
+                        suggestionsBox.style.display = 'block';
+                        historyDropdown.style.display = 'none';
+                    } else {
+                        suggestionsBox.style.display = 'none';
+                    }
+                }
+            }
+
+            function addSuggestionItem(text, type) {
+                if (suggestionsBox) {
                     const suggestionItem = document.createElement('div');
                     suggestionItem.className = 'suggestion-item';
-                    suggestionItem.textContent = suggestion;
+                    
+                    const icon = document.createElement('div');
+                    icon.className = 'suggestion-icon';
+                    icon.innerHTML = type === 'history' ? '🕒' : '🔍';
+                    
+                    const textDiv = document.createElement('div');
+                    textDiv.className = 'suggestion-text';
+                    textDiv.textContent = text;
+                    
+                    suggestionItem.appendChild(icon);
+                    suggestionItem.appendChild(textDiv);
+                    
                     suggestionItem.addEventListener('click', function() {
-                        searchInput.value = suggestion;
-                        performSearch(suggestion);
+                        searchInput.value = text;
+                        performSearch(text);
                     });
+                    
                     suggestionsBox.appendChild(suggestionItem);
-                });
-
-                suggestionsBox.style.display = 'block';
-                historyDropdown.style.display = 'none';
+                }
             }
 
             function performSearch(query) {
                 saveToHistory(query);
                 showLoader();
                 animateLogo();
-                // Пренасочване към Google Search с опции
-                window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}${getSearchOptions()}`;
+                // Redirect to Google Search with options, opening in a new tab
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}${getSearchOptions()}`, '_blank');
             }
 
             function getSearchOptions() {
                 let options = '';
-                if (safeSearch.checked) {
+                if (safeSearch?.checked) { // Use optional chaining for safer access
                     options += '&safe=active';
                 }
-                if (languageSelect.value) {
+                if (languageSelect?.value) { // Use optional chaining for safer access
                     options += `&hl=${languageSelect.value}`;
                 }
-                if (localStorage.getItem('resultsPerPage')) {
-                    options += `&num=${localStorage.getItem('resultsPerPage')}`;
+                const storedResultsPerPage = localStorage.getItem('resultsPerPage');
+                if (storedResultsPerPage) {
+                    options += `&num=${storedResultsPerPage}`;
+                }
+                const storedFileType = localStorage.getItem('fileType');
+                if (storedFileType) {
+                    options += `&as_filetype=${storedFileType}`; // Correct parameter for file type
+                }
+                const storedTimeRange = localStorage.getItem('timeRange');
+                if (storedTimeRange) {
+                    options += `&tbs=qdr:${storedTimeRange}`;
                 }
                 return options;
             }
 
             function saveToHistory(query) {
-                if (saveHistorySwitch && !saveHistorySwitch.checked) return;
+                // Ensure saveHistorySwitch exists and is checked
+                if (saveHistorySwitch && !saveHistorySwitch.checked) {
+                    return;
+                }
                 
                 let history = JSON.parse(localStorage.getItem('searchHistory')) || [];
-                // Премахване, ако вече съществува
+                // Remove if already exists (case-insensitive)
                 history = history.filter(item => item.toLowerCase() !== query.toLowerCase());
-                history.unshift(query); // Добавяне в началото
-                history = history.slice(0, 10); // Ограничаване до 10 елемента
+                history.unshift(query); // Add to the beginning
+                history = history.slice(0, 10); // Limit to 10 items
                 localStorage.setItem('searchHistory', JSON.stringify(history));
             }
 
@@ -1420,46 +1788,87 @@
             }
 
             function showSearchHistory() {
-                if (saveHistorySwitch && !saveHistorySwitch.checked) {
-                    historyDropdown.style.display = 'none';
-                    return;
-                }
-                
-                const history = loadSearchHistory();
-                if (history.length === 0) {
-                    historyDropdown.style.display = 'none';
-                    return;
-                }
+                if (historyDropdown) {
+                    // Ensure saveHistorySwitch exists before checking its state
+                    if (saveHistorySwitch && !saveHistorySwitch.checked) {
+                        historyDropdown.style.display = 'none';
+                        return;
+                    }
+                    
+                    const history = loadSearchHistory();
+                    if (history.length === 0) {
+                        historyDropdown.style.display = 'none';
+                        return;
+                    }
 
-                historyDropdown.innerHTML = '';
-                history.forEach(item => {
-                    const historyItem = document.createElement('div');
-                    historyItem.className = 'history-item';
-                    historyItem.textContent = item;
-                    historyItem.addEventListener('click', function() {
-                        searchInput.value = item;
-                        performSearch(item);
+                    historyDropdown.innerHTML = '';
+                    
+                    // Group by dates (in a real app, this would be by actual dates)
+                    const todayGroup = document.createElement('div');
+                    todayGroup.className = 'history-date-group';
+                    todayGroup.textContent = 'Today'; // Changed to English
+                    historyDropdown.appendChild(todayGroup);
+                    
+                    history.forEach((item, index) => {
+                        const historyItem = document.createElement('div');
+                        historyItem.className = 'history-item';
+                        
+                        const contentDiv = document.createElement('div');
+                        contentDiv.className = 'history-item-content';
+                        contentDiv.textContent = item;
+                        
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'delete-history-item';
+                        deleteBtn.innerHTML = '×';
+                        deleteBtn.title = 'Delete'; // Changed to English
+                        deleteBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            deleteHistoryItem(index);
+                        });
+                        
+                        historyItem.appendChild(contentDiv);
+                        historyItem.appendChild(deleteBtn);
+                        
+                        historyItem.addEventListener('click', function() {
+                            searchInput.value = item;
+                            performSearch(item);
+                        });
+                        
+                        historyDropdown.appendChild(historyItem);
                     });
-                    historyDropdown.appendChild(historyItem);
-                });
 
-                historyDropdown.style.display = 'block';
-                suggestionsBox.style.display = 'none';
+                    historyDropdown.style.display = 'block';
+                    suggestionsBox.style.display = 'none'; // Hide suggestions when history is shown
+                }
+            }
+
+            function deleteHistoryItem(index) {
+                let history = JSON.parse(localStorage.getItem('searchHistory')) || [];
+                if (index >= 0 && index < history.length) {
+                    history.splice(index, 1);
+                    localStorage.setItem('searchHistory', JSON.stringify(history));
+                    showSearchHistory();
+                    showToast('Search deleted from history');
+                }
             }
 
             function showLoader() {
-                loader.style.display = 'block';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 2000);
+                if (loader) {
+                    loader.style.display = 'block';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 2000); // Loader hides after 2 seconds
+                }
             }
 
             function animateLogo() {
-                logoImage.style.transform = 'scale(0.9)';
-                logoImage.style.transition = 'transform 0.3s ease';
-                setTimeout(() => {
-                    logoImage.style.transform = 'scale(1)';
-                }, 300);
+                if (logoImage) {
+                    logoImage.style.transform = 'scale(0.9)';
+                    logoImage.style.transition = 'transform 0.3s ease';
+                    setTimeout(() => {
+                        logoImage.style.transform = 'scale(1)';
+                    }, 300);
+                }
             }
 
             function showToast(message) {
@@ -1481,7 +1890,9 @@
                     toast.style.opacity = '0';
                     toast.style.transition = 'opacity 0.5s';
                     setTimeout(() => {
-                        document.body.removeChild(toast);
+                        if (toast.parentNode) { // Check if toast is still in DOM
+                            document.body.removeChild(toast);
+                        }
                     }, 500);
                 }, 3000);
             }

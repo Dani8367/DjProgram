@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 10 Симулатор - Професионална версия</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://4kwallpapers.com/images/wallpapers/windows-10-dark-mode-stock-official-3840x2400-563.jpg');
+            background-size: cover;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+            user-select: none;
+        }
+        
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 48px;
+            background-color: rgba(36, 36, 36, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            z-index: 10000;
+        }
+        
+        .start-button {
+            width: 40px;
+            height: 40px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Windows_logo_-_2012_%28dark_blue%29.svg/1200px-Windows_logo_-_2012_%28dark_blue%29.svg.png');
+            background-size: 60%;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin-right: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .start-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .taskbar-icons {
+            display: flex;
+            align-items: center;
+        }
+        
+        .task-icon {
+            width: 24px;
+            height: 24px;
+            margin: 0 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        
+        .task-icon:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .task-icon.active {
+            border-bottom: 2px solid #0078d7;
+        }
+        
+        .search-bar {
+            flex-grow: 1;
+            max-width: 500px;
+            margin: 0 20px;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .search-bar input:focus {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .system-tray {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        
+        .time {
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .time:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .desktop {
+            height: calc(100vh - 48px);
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 80px);
+            grid-auto-rows: 90px;
+            gap: 20px;
+        }
+        
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.2s;
+        }
+        
+        .desktop-icon:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .desktop-icon.selected {
+            background-color: rgba(0, 120, 215, 0.3);
+        }
+        
+        .desktop-icon img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+        
+        .desktop-icon span {
+            font-size: 12px;
+            text-shadow: 1px 1px 2px black;
+        }
+        
+        .window {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            width: 800px;
+            height: 500px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1000;
+            transition: transform 0.2s ease, opacity 0.2s ease, z-index 0.2s ease;
+            resize: both;
+            min-width: 400px;
+            min-height: 300px;
+        }
+        
+        .window.active {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            z-index: 1000;
+        }
+        
+        .window.inactive {
+            transform: translateY(10px) scale(0.98);
+            opacity: 0.9;
+            z-index: 999;
+        }
+        
+        .window.minimized {
+            transform: scale(0);
+            opacity: 0;
+            display: block !important;
+        }
+        
+        .window.maximized {
+            width: calc(100vw - 2px) !important;
+            height: calc(100vh - 50px) !important;
+            top: 0 !important;
+            left: 0 !important;
+            resize: none;
+        }
+        
+        .window-header {
+            height: 32px;
+            background-color: #f3f3f3;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            color: black;
+            cursor: grab;
+        }
+        
+        .window-header.dragging {
+            cursor: grabbing;
+        }
+        
+        .window-title {
+            flex-grow: 1;
+            font-size: 12px;
+        }
+        
+        .window-controls {
+            display: flex;
+        }
+        
+        .window-control {
+            width: 46px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .window-control:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .close:hover {
+            background-color: #e81123;
+            color: white;
+        }
+        
+        .window-content {
+            height: calc(100% - 32px);
+            color: #333;
+        }
+
+        /* Start Menu styles */
+        .start-menu {
+            position: fixed;
+            bottom: 48px;
+            left: 0;
+            width: 320px;
+            height: 500px;
+            background-color: rgba(36, 36, 36, 0.95);
+            backdrop-filter: blur(10px);
+            display: none;
+            flex-direction: column;
+            color: white;
+            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.2);
+            z-index: 2000;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            transform-origin: bottom left;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .start-menu.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .start-menu-header, .start-menu-footer {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .start-menu-content {
+            flex-grow: 1;
+            display: flex;
+            padding: 10px;
+        }
+
+        .start-menu-content .app-list {
+            width: 50%;
+        }
+
+        .start-menu-content .live-tiles {
+            width: 50%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            padding: 5px;
+        }
+
+        .live-tile {
+            background-color: rgba(0, 120, 215, 0.8);
+            border-radius: 4px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .live-tile:hover {
+            background-color: rgba(0, 120, 215, 1);
+            transform: scale(1.02);
+        }
+
+        .tile-header {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .tile-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tile-content img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .temperature, .date, .unread-count {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .location, .event, .latest-mail {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+
+        .weather { background-color: #0078d7; }
+        .calendar { background-color: #d13438; }
+        .mail { background-color: #498205; }
+        
+        .start-menu-content ul {
+            list-style: none;
+        }
+        
+        .start-menu-content li {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .start-menu-content li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Explorer Content Styles */
+        .explorer-content {
+            display: flex;
+            height: 100%;
+            padding: 0;
+            flex-direction: column;
+        }
+
+        .file-actions {
+            padding: 10px;
+            background: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+        }
+
+        .file-actions button {
+            padding: 5px 10px;
+            background: #e6e6e6;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .file-actions button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .path-display {
+            padding: 8px 15px;
+            background: #e6e6e6;
+            color: #333;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .path-item {
+            color: #0078d7;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .path-item:hover {
+            text-decoration: underline;
+        }
+
+        .explorer-panes {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .explorer-content .sidebar {
+            width: 25%;
+            padding: 15px;
+            background-color: #e6e6e6;
+            color: #333;
+            overflow-y: auto;
+        }
+        
+        .explorer-content .sidebar ul {
+            list-style: none;
+        }
+        
+        .explorer-content .sidebar li {
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .explorer-content .sidebar li:hover {
+            background-color: #d6d6d6;
+        }
+        
+        .explorer-content .sidebar li.active {
+            background-color: #c6e5ff;
+        }
+
+        .explorer-content .main-content {
+            width: 75%;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .explorer-content .drive {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .explorer-content .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .explorer-content .progress {
+            height: 100%;
+            background-color: #0078d7;
+            border-radius: 4px;
+        }
+        
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            padding: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .file-item:hover {
+            background-color: rgba(0, 120, 215, 0.1);
+        }
+        
+        .file-item.selected {
+            background-color: rgba(0, 120, 215, 0.3);
+        }
+        
+        .file-item img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+        
+        .file-item span {
+            font-size: 12px;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        /* Settings Content Styles */
+        .settings-content {
+            display: flex;
+            height: 100%;
+            padding: 0;
+        }
+
+        .settings-content .settings-menu {
+            width: 30%;
+            background-color: #e6e6e6;
+            color: #333;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .settings-content .settings-menu ul {
+            list-style: none;
+        }
+        
+        .settings-content .settings-menu li {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .settings-content .settings-menu li:hover {
+            background-color: #d6d6d6;
+        }
+        
+        .settings-content .settings-menu li.active {
+            background-color: #c6e5ff;
+        }
+
+        .settings-content .settings-details {
+            width: 70%;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .settings-option {
+            margin-bottom: 20px;
+        }
+        
+        .settings-option h3 {
+            margin-bottom: 10px;
+        }
+        
+        .settings-option p {
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #0078d7;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Edge Browser Styles */
+        .browser-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .browser-toolbar {
+            padding: 8px;
+            background-color: #f3f3f3;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .browser-toolbar button {
+            margin-right: 5px;
+            padding: 5px 10px;
+            background-color: #e6e6e6;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .browser-toolbar button:hover {
+            background-color: #d6d6d6;
+        }
+        
+        .browser-url {
+            flex-grow: 1;
+            margin: 0 10px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+        }
+        
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .quick-link {
+            padding: 8px 12px;
+            background: #e6e6e6;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .quick-link:hover {
+            background: #d6d6d6;
+        }
+        
+        .browser-message {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .browser-message img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        /* Mail Content Styles */
+        .mail-content {
+            display: flex;
+            height: 100%;
+            padding: 0;
+        }
+        
+        .mail-content .mail-list {
+            width: 35%;
+            background-color: #e6e6e6;
+            color: #333;
+            overflow-y: auto;
+            border-right: 1px solid #ccc;
+        }
+        
+        .mail-content .mail-body {
+            width: 65%;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .mail-item {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mail-item:hover {
+            background-color: #ddd;
+        }
+        
+        .mail-item.selected {
+            background-color: #c6e5ff;
+        }
+        
+        .mail-item h4 {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .mail-item p {
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .mail-body-content {
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        /* Context Menu styles */
+        .context-menu {
+            position: absolute;
+            background-color: #f9f9f9;
+            border: 1px solid #d4d4d4;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            z-index: 3000;
+            display: none;
+            color: #333;
+            min-width: 150px;
+        }
+        
+        .context-menu-item {
+            padding: 8px 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .context-menu-item:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .context-menu-separator {
+            height: 1px;
+            background-color: #d4d4d4;
+            margin: 5px 0;
+        }
+
+        /* Rename input */
+        .rename-input {
+            position: absolute;
+            background: white;
+            border: 1px solid #0078d7;
+            padding: 2px 5px;
+            font-size: 12px;
+            z-index: 100;
+        }
+
+        /* New styles for improved settings */
+        .network-item, .app-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin: 5px 0;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .signal-strength {
+            color: #0078d7;
+        }
+
+        .network-status {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .background-options {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .bg-preview {
+            width: 80px;
+            height: 60px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .bg-preview:hover {
+            border-color: #0078d7;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #ddd;
+        }
+
+        .color-preview:hover {
+            border-color: #0078d7;
+        }
+
+        .blue { background-color: #0078d7; }
+        .red { background-color: #d13438; }
+        .green { background-color: #498205; }
+        .purple { background-color: #881798; }
+
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #106ebe;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .update-status {
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .update-progress {
+            margin-top: 10px;
+            height: 8px;
+            background: #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .update-progress-bar {
+            height: 100%;
+            background: #0078d7;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop" id="desktop">
+        <div class="desktop-icon" onclick="openWindow('explorer')">
+            <img src="https://cdn-icons-png.flaticon.com/512/2965/2965300.png" alt="Този компютър">
+            <span>Този компютър</span>
+        </div>
+        <div class="desktop-icon" onclick="openWindow('edge')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" alt="Edge">
+            <span>Microsoft Edge</span>
+        </div>
+        <div class="desktop-icon" onclick="openWindow('settings')">
+            <img src="https://cdn-icons-png.flaticon.com/512/126/126472.png" alt="Настройки">
+            <span>Настройки</span>
+        </div>
+        <div class="desktop-icon" onclick="openWindow('mail')">
+            <img src="https://cdn-icons-png.flaticon.com/512/281/281023.png" alt="Поща">
+            <span>Поща</span>
+        </div>
+        <div class="desktop-icon" id="new-folder" style="display:none;">
+            <img src="https://cdn-icons-png.flaticon.com/512/3767/3767084.png" alt="Нова папка">
+            <span>Нова папка</span>
+        </div>
+    </div>
+    
+    <div class="start-menu" id="start-menu">
+        <div class="start-menu-header">
+            <span class="user-name">Потребител</span>
+        </div>
+        <div class="start-menu-content">
+            <div class="app-list">
+                <h4>Всички приложения</h4>
+                <ul>
+                    <li onclick="openWindow('explorer')">Файлов мениджър</li>
+                    <li onclick="openWindow('settings')">Настройки</li>
+                    <li onclick="openWindow('mail')">Поща</li>
+                    <li onclick="openWindow('edge')">Microsoft Edge</li>
+                </ul>
+            </div>
+            <div class="live-tiles">
+                <div class="live-tile weather" onclick="openWeatherApp()">
+                    <div class="tile-header">Времето</div>
+                    <div class="tile-content">
+                        <img src="https://cdn-icons-png.flaticon.com/512/1163/1163661.png" alt="Време">
+                        <span class="temperature">24°C</span>
+                        <span class="location">София</span>
+                    </div>
+                </div>
+                <div class="live-tile calendar" onclick="openCalendarApp()">
+                    <div class="tile-header">Календар</div>
+                    <div class="tile-content">
+                        <span class="date" id="current-date">15 окт.</span>
+                        <span class="event">Среща в 15:00</span>
+                    </div>
+                </div>
+                <div class="live-tile mail" onclick="openWindow('mail')">
+                    <div class="tile-header">Поща</div>
+                    <div class="tile-content">
+                        <span class="unread-count">3 нови</span>
+                        <span class="latest-mail">От: Microsoft</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="start-menu-footer">
+            <div class="power-options" onclick="shutdown()">
+                <span>Изключване</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="taskbar">
+        <div class="start-button" onclick="toggleStartMenu()"></div>
+        <div class="taskbar-icons">
+            <img class="task-icon" src="https://cdn-icons-png.flaticon.com/512/2965/2965300.png" alt="Проводник" onclick="openWindow('explorer')">
+            <img class="task-icon" src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" alt="Edge" onclick="openWindow('edge')">
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Търсене в Windows">
+        </div>
+        <div class="system-tray">
+            <div class="time" id="time">14:25</div>
+        </div>
+    </div>
+    
+    <div class="window" id="explorer-window">
+        <div class="window-header">
+            <div class="window-title">Този компютър</div>
+            <div class="window-controls">
+                <div class="window-control minimize" onclick="minimizeWindow(this)">—</div>
+                <div class="window-control maximize" onclick="maximizeWindow(this)">□</div>
+                <div class="window-control close" onclick="closeWindow('explorer')">×</div>
+            </div>
+        </div>
+        <div class="window-content explorer-content">
+            <div class="file-actions">
+                <button onclick="createNewFolder()">Нова папка</button>
+                <button onclick="deleteSelected()" id="delete-btn" disabled>Изтрий избрано</button>
+                <button onclick="renameSelected()" id="rename-btn" disabled>Преименувай</button>
+            </div>
+            <div class="path-display">
+                <span class="path-item" onclick="navigateTo('root')">Този компютър</span>
+                <span id="current-path"></span>
+            </div>
+            <div class="explorer-panes">
+                <div class="sidebar">
+                    <ul>
+                        <li class="active" onclick="navigateTo('root')">Бърз достъп</li>
+                        <li onclick="navigateTo('root')">Този компютър</li>
+                        <li>OneDrive</li>
+                        <li>Мрежа</li>
+                    </ul>
+                </div>
+                <div class="main-content">
+                    <div class="file-grid" id="explorer-files">
+                        <!-- Съдържанието се генерира динамично от JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="window" id="edge-window">
+        <div class="window-header">
+            <div class="window-title">Microsoft Edge</div>
+            <div class="window-controls">
+                <div class="window-control minimize" onclick="minimizeWindow(this)">—</div>
+                <div class="window-control maximize" onclick="maximizeWindow(this)">□</div>
+                <div class="window-control close" onclick="closeWindow('edge')">×</div>
+            </div>
+        </div>
+        <div class="window-content browser-content">
+            <div class="browser-toolbar">
+                <button onclick="browserGoBack()">←</button>
+                <button onclick="browserGoForward()">→</button>
+                <button onclick="browserRefresh()">↻</button>
+                <input type="text" class="browser-url" id="edge-url" placeholder="Въведете URL адрес" onkeypress="if(event.key=='Enter')browserGo()">
+                <button onclick="browserGo()">Отиди</button>
+            </div>
+            <div class="quick-links">
+                <div class="quick-link" onclick="loadUrl('https://googleclone.free.bg/%ED%EE%E21.html')">Google Clone</div>
+                <div class="quick-link" onclick="loadUrl('https://www.google.com')">Google</div>
+                <div class="quick-link" onclick="loadUrl('https://www.youtube.com')">YouTube</div>
+                <div class="quick-link" onclick="loadUrl('https://www.wikipedia.org')">Wikipedia</div>
+            </div>
+            <div class="browser-message">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" alt="Edge">
+                <p>Страниците ще се отварят в нов таб на вашия браузър</p>
+                <p>Въведете URL адрес в полето горе или изберете от бързите линкове</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="window" id="settings-window">
+        <div class="window-header">
+            <div class="window-title">Настройки</div>
+            <div class="window-controls">
+                <div class="window-control minimize" onclick="minimizeWindow(this)">—</div>
+                <div class="window-control maximize" onclick="maximizeWindow(this)">□</div>
+                <div class="window-control close" onclick="closeWindow('settings')">×</div>
+            </div>
+        </div>
+        <div class="window-content settings-content">
+            <div class="settings-menu">
+                <ul>
+                    <li class="active" onclick="showSettingsCategory('system', event)">Система</li>
+                    <li onclick="showSettingsCategory('network', event)">Мрежа и интернет</li>
+                    <li onclick="showSettingsCategory('personalization', event)">Персонализация</li>
+                    <li onclick="showSettingsCategory('apps', event)">Приложения</li>
+                    <li onclick="showSettingsCategory('update', event)">Актуализация и защита</li>
+                </ul>
+            </div>
+            <div class="settings-details" id="settings-details">
+                <div id="system-settings">
+                    <h2>Система</h2>
+                    <div class="settings-option">
+                        <h3>Екран</h3>
+                        <p>Настройки на дисплея и яркост</p>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Звук</h3>
+                        <p>Настройки на звука и звуковите устройства</p>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Батерия</h3>
+                        <p>Настройки за пестене на енергия</p>
+                    </div>
+                </div>
+                
+                <div id="network-settings" style="display:none;">
+                    <h2>Мрежа и интернет</h2>
+                    <div class="settings-option">
+                        <h3>Wi-Fi</h3>
+                        <p>Управление на безжичните мрежи</p>
+                        <div class="wifi-networks">
+                            <div class="network-item">
+                                <span>Домашна мрежа</span>
+                                <span class="signal-strength">●●●○</span>
+                                <span class="network-status">Свързана</span>
+                            </div>
+                            <div class="network-item">
+                                <span>Кафене Мрежа</span>
+                                <span class="signal-strength">●●○○</span>
+                                <span class="network-status">Достъпна</span>
+                            </div>
+                            <button onclick="connectToWiFi()">Свържи се</button>
+                        </div>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Ethernet</h3>
+                        <p>Настройки на кабелната мрежа</p>
+                        <div class="ethernet-status">
+                            <span>Състояние: Свързан</span>
+                            <span>IP адрес: 192.168.1.100</span>
+                        </div>
+                    </div>
+                    <div class="settings-option">
+                        <h3>VPN</h3>
+                        <p>Добавяне на VPN връзка</p>
+                        <button onclick="addVPN()">Добави VPN</button>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Мрежови диагностики</h3>
+                        <p>Отстраняване на проблеми с мрежата</p>
+                        <button onclick="runNetworkDiagnostics()">Стартирай диагностика</button>
+                    </div>
+                </div>
+                
+                <div id="personalization-settings" style="display:none;">
+                    <h2>Персонализация</h2>
+                    <div class="settings-option">
+                        <h3>Фон</h3>
+                        <p>Промяна на фона на работния плот</p>
+                        <div class="background-options">
+                            <div class="bg-preview" onclick="changeBackground('default')" style="background-image: url('https://4kwallpapers.com/images/wallpapers/windows-10-dark-mode-stock-official-3840x2400-563.jpg')"></div>
+                            <div class="bg-preview" onclick="changeBackground('nature')" style="background-image: url('https://wallpapercave.com/wp/wp2555732.jpg')"></div>
+                            <div class="bg-preview" onclick="changeBackground('abstract')" style="background-image: url('https://wallpaperaccess.com/full/733543.jpg')"></div>
+                        </div>
+                        <button onclick="browseForBackground()">Преглед...</button>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Цветове</h3>
+                        <p>Промяна на цветовата схема</p>
+                        <div class="color-options">
+                            <div class="color-preview blue" onclick="changeColorScheme('blue')"></div>
+                            <div class="color-preview red" onclick="changeColorScheme('red')"></div>
+                            <div class="color-preview green" onclick="changeColorScheme('green')"></div>
+                            <div class="color-preview purple" onclick="changeColorScheme('purple')"></div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="dark-mode-toggle">
+                            <span class="toggle-slider"></span>
+                            <span>Тъмен режим</span>
+                        </label>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Теми</h3>
+                        <p>Прилагане на пълна тема към вашия компютър</p>
+                        <select id="theme-selector" onchange="applyTheme(this.value)">
+                            <option value="windows-default">Windows по подразбиране</option>
+                            <option value="ocean">Океан</option>
+                            <option value="forest">Гора</option>
+                            <option value="sunset">Залез</option>
+                        </select>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Екран за заключване</h3>
+                        <p>Персонализирайте екрана си за заключване</p>
+                        <button onclick="customizeLockScreen()">Персонализирай</button>
+                    </div>
+                </div>
+                
+                <div id="apps-settings" style="display:none;">
+                    <h2>Приложения</h2>
+                    <div class="settings-option">
+                        <h3>Приложения и функции</h3>
+                        <p>Управление на инсталираните приложения</p>
+                        <div class="app-list">
+                            <div class="app-item">
+                                <span>Microsoft Edge</span>
+                                <span>Версия 120.0.2210.91</span>
+                                <span>1.2 GB</span>
+                                <button onclick="uninstallApp('edge')">Деинсталирай</button>
+                            </div>
+                            <div class="app-item">
+                                <span>Windows Поща</span>
+                                <span>Версия 16005.14326.20144.0</span>
+                                <span>245 MB</span>
+                                <button onclick="uninstallApp('mail')">Деинсталирай</button>
+                            </div>
+                            <div class="app-item">
+                                <span>Настройки</span>
+                                <span>Версия 10.2103.2.0</span>
+                                <span>85 MB</span>
+                                <button disabled>Системно приложение</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Приложения по подразбиране</h3>
+                        <p>Изберете приложенията по подразбиране за различни типове файлове</p>
+                        <button onclick="setDefaultApps()">Управление на приложения по подразбиране</button>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Офлайн карти</h3>
+                        <p>Управление на офлайн карти за използване без интернет</p>
+                        <button onclick="manageOfflineMaps()">Управление на карти</button>
+                    </div>
+                </div>
+                
+                <div id="update-settings" style="display:none;">
+                    <h2>Актуализация и защита</h2>
+                    <div class="settings-option">
+                        <h3>Windows Update</h3>
+                        <p>Последна проверка: <span id="last-check-time">Днес, 14:30</span></p>
+                        <div id="update-status-container">
+                            <p>Вашата версия на Windows е актуална</p>
+                            <div class="available-updates" id="available-updates" style="display:none;">
+                                <h4>Налични актуализации:</h4>
+                                <ul id="updates-list"></ul>
+                            </div>
+                            <button onclick="checkForUpdates()" id="check-updates-btn">Провери за актуализации</button>
+                            <button onclick="installUpdates()" id="install-updates-btn" style="display:none; margin-top:10px;">Инсталирай актуализации</button>
+                        </div>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Защита</h3>
+                        <p>Статус на защитата: <span id="security-status">Активна</span></p>
+                        <div class="security-patches" id="security-patches">
+                            <h4>Инсталирани сигурностни пачове:</h4>
+                            <ul id="installed-patches-list">
+                                <li>KB5005101 - Сигурностен пач за Windows (септември 2025)</li>
+                            </ul>
+                        </div>
+                        <button onclick="runSecurityScan()">Бързо сканиране</button>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Архивиране</h3>
+                        <p>Настройки за архивиране на вашите файлове</p>
+                        <button onclick="setupBackup()">Настрой архивиране</button>
+                    </div>
+                    <div class="settings-option">
+                        <h3>Възстановяване</h3>
+                        <p>Опции за възстановяване на системата</p>
+                        <button onclick="systemRestore()">Създай точка за възстановяване</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="mail-window">
+        <div class="window-header">
+            <div class="window-title">Поща</div>
+            <div class="window-controls">
+                <div class="window-control minimize" onclick="minimizeWindow(this)">—</div>
+                <div class="window-control maximize" onclick="maximizeWindow(this)">□</div>
+                <div class="window-control close" onclick="closeWindow('mail')">×</div>
+            </div>
+        </div>
+        <div class="window-content mail-content">
+            <div class="mail-list">
+                <div class="mail-item selected" onclick="selectMail(this, 1)">
+                    <h4>От: Google</h4>
+                    <p>Ново в Google Cloud</p>
+                </div>
+                <div class="mail-item" onclick="selectMail(this, 2)">
+                    <h4>От: Microsoft</h4>
+                    <p>Актуализация на Windows</p>
+                </div>
+                <div class="mail-item" onclick="selectMail(this, 3)">
+                    <h4>От: GitHub</h4>
+                    <p>Нови функции в GitHub</p>
+                </div>
+                <div class="mail-item" onclick="selectMail(this, 4)">
+                    <h4>От: LinkedIn</h4>
+                    <p>Нови предложения за работа</p>
+                </div>
+            </div>
+            <div class="mail-body">
+                <h3>Ново в Google Cloud</h3>
+                <p>От: support@google.com</p>
+                <p>До: Аз</p>
+                <p>Дата: 19 октомври 2025 г.</p>
+                <div class="mail-body-content">
+                    <p>Здравейте,</p>
+                    <p>Екипът на Google Cloud ви изпраща нова актуализация за нашите продукти и услуги.</p>
+                    <p>Нови функции:</p>
+                    <ul>
+                        <li>Подобрена сигурност в Cloud Storage</li>
+                        <li>Нови инструменти за анализ на данни</li>
+                        <li>Оптимизирани цени за дългосрочно съхранение</li>
+                    </ul>
+                    <p>Благодарим ви, че използвате Google Cloud!</p>
+                    <p>С уважение,<br>Екипът на Google Cloud</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="context-menu" id="desktop-context-menu">
+        <div class="context-menu-item" onclick="openWindow('explorer')">Нов прозорец</div>
+        <div class="context-menu-item" onclick="createNewFolder()">Нова папка</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" onclick="refreshDesktop()">Обнови</div>
+        <div class="context-menu-item">Персонализиране</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item">Промяна на фона</div>
+    </div>
+    
+    <div class="context-menu" id="file-context-menu">
+        <div class="context-menu-item" onclick="openSelected()">Отвори</div>
+        <div class="context-menu-item">Отвори с</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item">Изрежи</div>
+        <div class="context-menu-item">Копирай</div>
+        <div class="context-menu-item">Постави</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" onclick="renameSelected()">Преименувай</div>
+        <div class="context-menu-item" onclick="deleteSelected()">Изтрий</div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item">Свойства</div>
+    </div>
+    
+    <script>
+        // Глобални променливи
+        let activeWindow = null;
+        let zIndexCounter = 1000;
+        let currentMail = 1;
+        let currentPath = 'root';
+        let selectedFile = null;
+
+        // --- Виртуална файлова система ---
+        const fileSystem = {
+            type: 'folder',
+            content: {
+                'Documents': {
+                    type: 'folder',
+                    content: {
+                        'Report.docx': { type: 'file' },
+                        'Budget.xlsx': { type: 'file' }
+                    }
+                },
+                'Pictures': {
+                    type: 'folder',
+                    content: {
+                        'Vacation.jpg': { type: 'file' },
+                        'Family.png': { type: 'file' }
+                    }
+                },
+                'Local Disk (C:)': { type: 'drive', content: {} },
+                'Local Disk (D:)': { type: 'drive', content: {} }
+            }
+        };
+
+        const iconPaths = {
+            folder: 'https://cdn-icons-png.flaticon.com/512/3767/3767084.png',
+            file: 'https://cdn-icons-png.flaticon.com/512/2965/2965335.png',
+            drive: 'https://cdn-icons-png.flaticon.com/512/2965/2965300.png'
+        };
+        
+        // --- Данни за актуализации ---
+        const availableUpdates = [
+            { id: 'KB5005565', name: 'Сигурностен пач за Windows (октомври 2025)', type: 'security', installed: false },
+            { id: 'KB5005611', name: 'Актуализация на функциите (октомври 2025)', type: 'feature', installed: false },
+            { id: 'KB5005625', name: 'Сигурностен пач за .NET Framework', type: 'security', installed: false }
+        ];
+
+        const installedPatches = [
+            { id: 'KB5005101', name: 'Сигурностен пач за Windows (септември 2025)', type: 'security', installDate: '2025-09-15' }
+        ];
+
+        // --- Функции за браузъра Edge ---
+        function loadUrl(url) {
+            window.open(url, '_blank');
+        }
+
+        function browserGo() {
+            let url = document.getElementById('edge-url').value.trim();
+            
+            if (!url) return;
+            
+            // Добавяме https:// ако липсва
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            
+            loadUrl(url);
+        }
+
+        function browserGoBack() {
+            alert("Навигацията назад работи само в истинския браузър");
+        }
+        
+        function browserGoForward() {
+            alert("Навигацията напред работи само в истинския браузър");
+        }
+        
+        function browserRefresh() {
+            alert("Опресняването работи само в истинския браузър");
+        }
+
+        // --- Функции за живите тайлове ---
+        function openWeatherApp() {
+            alert("Приложението за времето ще се отвори тук в реален симулатор");
+        }
+
+        function openCalendarApp() {
+            alert("Календарното приложение ще се отвори тук в реален симулатор");
+        }
+
+        function updateLiveTiles() {
+            // Актуализиране на времето
+            const weatherTile = document.querySelector('.live-tile.weather .temperature');
+            const randomTemp = Math.floor(Math.random() * 10) + 18; // Генерира случайна температура между 18 и 28°C
+            weatherTile.textContent = `${randomTemp}°C`;
+            
+            // Актуализиране на датата
+            const now = new Date();
+            const options = { month: 'short', day: 'numeric' };
+            document.querySelector('.live-tile.calendar .date').textContent = 
+                now.toLocaleDateString('bg-BG', options);
+            
+            // Актуализиране на пощата
+            const unreadCount = Math.floor(Math.random() * 5);
+            document.querySelector('.live-tile.mail .unread-count').textContent = 
+                unreadCount > 0 ? `${unreadCount} нови` : "Няма нови";
+        }
+
+        // --- Функции за настройките ---
+        function connectToWiFi() {
+            alert("Свързване с Wi-Fi мрежа...");
+        }
+
+        function addVPN() {
+            alert("Добавяне на нова VPN връзка...");
+        }
+
+        function runNetworkDiagnostics() {
+            alert("Стартиране на мрежови диагностики...");
+        }
+
+        function changeBackground(bgType) {
+            let bgUrl = '';
+            switch(bgType) {
+                case 'default':
+                    bgUrl = 'https://4kwallpapers.com/images/wallpapers/windows-10-dark-mode-stock-official-3840x2400-563.jpg';
+                    break;
+                case 'nature':
+                    bgUrl = 'https://wallpapercave.com/wp/wp2555732.jpg';
+                    break;
+                case 'abstract':
+                    bgUrl = 'https://wallpaperaccess.com/full/733543.jpg';
+                    break;
+            }
+            document.body.style.backgroundImage = `url('${bgUrl}')`;
+            alert(`Фонът е променен на ${bgType}`);
+        }
+
+        function browseForBackground() {
+            alert("Изберете изображение от вашия компютър");
+        }
+
+        function changeColorScheme(color) {
+            alert(`Цветовата схема е променена на ${color}`);
+        }
+
+        function applyTheme(theme) {
+            alert(`Приложена е темата ${theme}`);
+        }
+
+        function customizeLockScreen() {
+            alert("Персонализиране на екрана за заключване...");
+        }
+
+        function uninstallApp(app) {
+            if (confirm(`Сигурни ли сте, че искате да деинсталирате ${app}?`)) {
+                alert(`Приложението ${app} се деинсталира...`);
+            }
+        }
+
+        function setDefaultApps() {
+            alert("Управление на приложения по подразбиране...");
+        }
+
+        function manageOfflineMaps() {
+            alert("Управление на офлайн карти...");
+        }
+
+        function checkForUpdates() {
+            const checkBtn = document.getElementById('check-updates-btn');
+            checkBtn.disabled = true;
+            checkBtn.textContent = "Проверява се...";
+            
+            // Симулиране на забавяне при проверка
+            setTimeout(() => {
+                const hasUpdates = availableUpdates.some(update => !update.installed);
+                
+                if (hasUpdates) {
+                    document.getElementById('update-status-container').innerHTML = `
+                        <p>Намерени са нови актуализации</p>
+                        <div class="available-updates" id="available-updates">
+                            <h4>Налични актуализации:</h4>
+                            <ul id="updates-list"></ul>
+                        </div>
+                        <button onclick="installUpdates()" id="install-updates-btn" style="margin-top:10px;">Инсталирай актуализации</button>
+                    `;
+                    
+                    const updatesList = document.getElementById('updates-list');
+                    availableUpdates.forEach(update => {
+                        if (!update.installed) {
+                            const li = document.createElement('li');
+                            li.innerHTML = `
+                                <input type="checkbox" id="update-${update.id}" checked>
+                                <label for="update-${update.id}">${update.name}</label>
+                            `;
+                            updatesList.appendChild(li);
+                        }
+                    });
+                } else {
+                    document.getElementById('update-status-container').innerHTML = `
+                        <p>Вашата версия на Windows е актуална</p>
+                        <button onclick="checkForUpdates()" id="check-updates-btn">Провери за актуализации</button>
+                    `;
+                }
+                
+                // Актуализиране на времето на последна проверка
+                const now = new Date();
+                document.getElementById('last-check-time').textContent = 
+                    `Днес, ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            }, 2000);
+        }
+
+        function installUpdates() {
+            const installBtn = document.getElementById('install-updates-btn');
+            installBtn.disabled = true;
+            installBtn.textContent = "Инсталира се...";
+            
+            // Симулиране на инсталационен процес
+            setTimeout(() => {
+                const progressBar = document.createElement('div');
+                progressBar.className = 'update-progress';
+                progressBar.innerHTML = '<div class="update-progress-bar" style="width:0%"></div>';
+                installBtn.parentNode.insertBefore(progressBar, installBtn.nextSibling);
+                
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 5;
+                    document.querySelector('.update-progress-bar').style.width = `${progress}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        completeInstallation();
+                    }
+                }, 200);
+            }, 500);
+        }
+
+        function completeInstallation() {
+            // Маркиране на актуализациите като инсталирани
+            availableUpdates.forEach(update => {
+                if (!update.installed) {
+                    update.installed = true;
+                    if (update.type === 'security') {
+                        installedPatches.push({
+                            id: update.id,
+                            name: update.name,
+                            type: update.type,
+                            installDate: new Date().toISOString().split('T')[0]
+                        });
+                    }
+                }
+            });
+            
+            // Актуализиране на списъка с инсталирани пачове
+            updateInstalledPatchesList();
+            
+            document.getElementById('update-status-container').innerHTML = `
+                <p>Всички актуализации са успешно инсталирани</p>
+                <p>Системата може да изисква рестарт за да приложи промените</p>
+                <button onclick="checkForUpdates()" id="check-updates-btn">Провери за актуализации</button>
+            `;
+        }
+
+        function updateInstalledPatchesList() {
+            const patchesList = document.getElementById('installed-patches-list');
+            patchesList.innerHTML = '';
+            
+            installedPatches.forEach(patch => {
+                const li = document.createElement('li');
+                li.textContent = `${patch.id} - ${patch.name} (${patch.installDate})`;
+                patchesList.appendChild(li);
+            });
+        }
+
+        function runSecurityScan() {
+            alert("Стартиране на бързо сканиране за вируси...");
+        }
+
+        function setupBackup() {
+            alert("Настройка на архивиране...");
+        }
+
+        function systemRestore() {
+            alert("Създаване на точка за възстановяване...");
+        }
+
+        // --- Останалите функции ---
+        function updateTime() {
+            const now = new Date();
+            const timeElement = document.getElementById('time');
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            timeElement.textContent = `${hours}:${minutes}`;
+            
+            timeElement.title = now.toLocaleDateString('bg-BG', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        function openWindow(windowId) {
+            const windowElement = document.getElementById(windowId + '-window');
+            
+            toggleStartMenu(false);
+            
+            if (windowElement.classList.contains('minimized')) {
+                windowElement.classList.remove('minimized');
+                setTimeout(() => {
+                    windowElement.style.display = 'block';
+                    windowElement.style.transform = 'scale(1)';
+                    windowElement.style.opacity = '1';
+                }, 10);
+            } else {
+                windowElement.style.display = 'block';
+                windowElement.style.transform = 'scale(0.9)';
+                windowElement.style.opacity = '0';
+                setTimeout(() => {
+                    windowElement.style.transform = 'scale(1)';
+                    windowElement.style.opacity = '1';
+                }, 10);
+            }
+            
+            zIndexCounter++;
+            windowElement.style.zIndex = zIndexCounter;
+            
+            document.querySelectorAll('.window').forEach(w => {
+                if (w !== windowElement && w.style.display === 'block') {
+                    w.classList.add('inactive');
+                    w.classList.remove('active');
+                }
+            });
+            
+            windowElement.classList.add('active');
+            windowElement.classList.remove('inactive');
+            activeWindow = windowElement;
+            
+            document.querySelectorAll('.task-icon').forEach(icon => {
+                icon.classList.remove('active');
+            });
+            const taskIcon = document.querySelector(`.task-icon[onclick="openWindow('${windowId}')"]`);
+            if (taskIcon) {
+                taskIcon.classList.add('active');
+            }
+        }
+        
+        function closeWindow(windowId) {
+            const windowElement = document.getElementById(windowId + '-window');
+            
+            windowElement.style.transform = 'scale(0.9)';
+            windowElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                windowElement.style.display = 'none';
+                windowElement.style.transform = 'scale(1)';
+                windowElement.style.opacity = '1';
+            }, 200);
+            
+            document.querySelector(`.task-icon[onclick="openWindow('${windowId}')"]`)?.classList.remove('active');
+        }
+        
+        function minimizeWindow(button) {
+            const windowElement = button.closest('.window');
+            windowElement.classList.add('minimized');
+            
+            windowElement.style.transform = 'scale(0)';
+            windowElement.style.opacity = '0';
+            
+            setTimeout(() => {
+                windowElement.style.display = 'none';
+            }, 200);
+            
+            const windowId = windowElement.id.replace('-window', '');
+            document.querySelector(`.task-icon[onclick="openWindow('${windowId}')"]`)?.classList.remove('active');
+        }
+        
+        function maximizeWindow(button) {
+            const windowElement = button.closest('.window');
+            
+            if (windowElement.classList.contains('maximized')) {
+                windowElement.classList.remove('maximized');
+                windowElement.style.width = '800px';
+                windowElement.style.height = '500px';
+                windowElement.style.top = '100px';
+                windowElement.style.left = '100px';
+                button.textContent = '□';
+            } else {
+                windowElement.classList.add('maximized');
+                button.textContent = '❐';
+            }
+        }
+        
+        function toggleStartMenu(force) {
+            const startMenu = document.getElementById('start-menu');
+            
+            if (force === false) {
+                startMenu.classList.remove('visible');
+                setTimeout(() => {
+                    startMenu.style.display = 'none';
+                }, 200);
+            } else {
+                if (startMenu.style.display === 'flex') {
+                    startMenu.classList.remove('visible');
+                    setTimeout(() => {
+                        startMenu.style.display = 'none';
+                    }, 200);
+                } else {
+                    startMenu.style.display = 'flex';
+                    setTimeout(() => {
+                        startMenu.classList.add('visible');
+                    }, 10);
+                }
+            }
+        }
+        
+        document.getElementById('desktop').addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            
+            const contextMenu = document.getElementById('desktop-context-menu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = `${e.clientX}px`;
+            contextMenu.style.top = `${e.clientY}px`;
+            
+            setTimeout(() => {
+                document.addEventListener('click', function closeMenu() {
+                    contextMenu.style.display = 'none';
+                    document.removeEventListener('click', closeMenu);
+                });
+            }, 10);
+        });
+        
+        function showFileContextMenu(e, fileItem) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            document.querySelectorAll('.file-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            fileItem.classList.add('selected');
+            selectedFile = fileItem;
+            updateActionButtons();
+            
+            const contextMenu = document.getElementById('file-context-menu');
+            contextMenu.style.display = 'block';
+            contextMenu.style.left = `${e.clientX}px`;
+            contextMenu.style.top = `${e.clientY}px`;
+            
+            setTimeout(() => {
+                document.addEventListener('click', function closeMenu() {
+                    contextMenu.style.display = 'none';
+                    document.removeEventListener('click', closeMenu);
+                });
+            }, 10);
+        }
+
+        function getNodeFromPath(path) {
+            if (path === 'root') return fileSystem;
+            const parts = path.split('/');
+            let currentNode = fileSystem;
+            for (let i = 1; i < parts.length; i++) {
+                const part = parts[i];
+                if (currentNode && currentNode.content && currentNode.content[part]) {
+                    currentNode = currentNode.content[part];
+                } else {
+                    return null;
+                }
+            }
+            return currentNode;
+        }
+
+        function renderFileSystem(path) {
+            const filesContainer = document.getElementById('explorer-files');
+            filesContainer.innerHTML = '';
+            const node = getNodeFromPath(path);
+
+            if (node && (node.type === 'folder' || node.type === 'drive') && node.content) {
+                for (const itemName in node.content) {
+                    const item = node.content[itemName];
+                    const fileItemDiv = document.createElement('div');
+                    fileItemDiv.className = 'file-item';
+                    fileItemDiv.setAttribute('data-path', `${path}/${itemName}`);
+                    fileItemDiv.setAttribute('data-type', item.type);
+
+                    fileItemDiv.innerHTML = `
+                        <img src="${iconPaths[item.type] || iconPaths['file']}" alt="${item.type}">
+                        <span>${itemName}</span>
+                    `;
+
+                    fileItemDiv.addEventListener('click', function() {
+                        document.querySelectorAll('.file-item').forEach(item => item.classList.remove('selected'));
+                        this.classList.add('selected');
+                        selectedFile = this;
+                        updateActionButtons();
+                    });
+                    
+                    fileItemDiv.addEventListener('dblclick', function() {
+                        openSelected();
+                    });
+
+                    fileItemDiv.addEventListener('contextmenu', function(e) {
+                        showFileContextMenu(e, this);
+                    });
+
+                    filesContainer.appendChild(fileItemDiv);
+                }
+            }
+        }
+        
+        function createNewFolder() {
+            const parentNode = getNodeFromPath(currentPath);
+            if (!parentNode || (parentNode.type !== 'folder' && parentNode.type !== 'drive')) return;
+
+            let newName = 'Нова папка';
+            let counter = 1;
+            while (parentNode.content[newName]) {
+                counter++;
+                newName = `Нова папка (${counter})`;
+            }
+
+            parentNode.content[newName] = { type: 'folder', content: {} };
+            renderFileSystem(currentPath);
+            document.getElementById('desktop-context-menu').style.display = 'none';
+        }
+        
+        function deleteSelected() {
+            if (!selectedFile) return;
+
+            const itemName = selectedFile.querySelector('span').textContent;
+            if (confirm(`Сигурни ли сте, че искате да изтриете "${itemName}"?`)) {
+                const itemPath = selectedFile.getAttribute('data-path');
+                const pathParts = itemPath.split('/');
+                const fileName = pathParts.pop();
+                const parentPath = pathParts.join('/') || 'root';
+                const parentNode = getNodeFromPath(parentPath);
+
+                if (parentNode && parentNode.content[fileName]) {
+                    delete parentNode.content[fileName];
+                    selectedFile = null;
+                    updateActionButtons();
+                    renderFileSystem(currentPath);
+                }
+            }
+        }
+        
+        function renameSelected() {
+            if (!selectedFile) return;
+            
+            const fileNameSpan = selectedFile.querySelector('span');
+            const originalName = fileNameSpan.textContent;
+            const rect = selectedFile.getBoundingClientRect();
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = originalName;
+            input.className = 'rename-input';
+            input.style.left = `${rect.left}px`;
+            input.style.top = `${rect.top + 45}px`;
+            input.style.width = `${rect.width - 10}px`;
+            
+            input.addEventListener('blur', () => finishRenaming(input, originalName));
+            input.addEventListener('keyup', e => {
+                if (e.key === 'Enter') finishRenaming(input, originalName);
+                if (e.key === 'Escape') input.remove();
+            });
+            
+            document.body.appendChild(input);
+            input.focus();
+            input.select();
+            
+            function finishRenaming(inputElement, oldName) {
+                const newName = inputElement.value.trim();
+                inputElement.remove();
+                
+                if (newName && newName !== oldName) {
+                    const itemPath = selectedFile.getAttribute('data-path');
+                    const pathParts = itemPath.split('/');
+                    pathParts.pop();
+                    const parentPath = pathParts.join('/') || 'root';
+                    const parentNode = getNodeFromPath(parentPath);
+                    
+                    if (parentNode && parentNode.content[oldName] && !parentNode.content[newName]) {
+                        parentNode.content[newName] = parentNode.content[oldName];
+                        delete parentNode.content[oldName];
+                        renderFileSystem(currentPath);
+                    } else if (parentNode.content[newName]) {
+                        alert("Файл с това име вече съществува!");
+                    }
+                }
+            }
+        }
+        
+        function openSelected() {
+            if (!selectedFile) return;
+            
+            const fileType = selectedFile.getAttribute('data-type');
+            if (fileType === 'folder' || fileType === 'drive') {
+                navigateTo(selectedFile.getAttribute('data-path'));
+            } else {
+                alert(`Отваряне на файл: ${selectedFile.querySelector('span').textContent}`);
+            }
+            
+            document.getElementById('file-context-menu').style.display = 'none';
+        }
+        
+        function navigateTo(path) {
+            currentPath = path;
+            selectedFile = null;
+            updateActionButtons();
+            updatePathDisplay();
+            renderFileSystem(path);
+        }
+        
+        function updatePathDisplay() {
+            const pathDisplay = document.getElementById('current-path');
+            pathDisplay.innerHTML = '';
+            if (currentPath === 'root') return;
+
+            const parts = currentPath.split('/');
+            let builtPath = 'root';
+            for (let i = 1; i < parts.length; i++) {
+                builtPath += `/${parts[i]}`;
+                pathDisplay.innerHTML += ` &gt; <span class="path-item" onclick="navigateTo('${builtPath}')">${parts[i]}</span>`;
+            }
+        }
+        
+        function updateActionButtons() {
+            const deleteBtn = document.getElementById('delete-btn');
+            const renameBtn = document.getElementById('rename-btn');
+            
+            if (selectedFile) {
+                deleteBtn.disabled = false;
+                renameBtn.disabled = false;
+            } else {
+                deleteBtn.disabled = true;
+                renameBtn.disabled = true;
+            }
+        }
+        
+        function refreshDesktop() {
+            document.getElementById('desktop-context-menu').style.display = 'none';
+            renderFileSystem(currentPath);
+        }
+        
+        function selectMail(mailItem, mailId) {
+            document.querySelectorAll('.mail-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            mailItem.classList.add('selected');
+            currentMail = mailId;
+        }
+        
+        function showSettingsCategory(category, event) {
+            document.querySelectorAll('.settings-menu li').forEach(li => {
+                li.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            document.querySelectorAll('#settings-details > div').forEach(div => {
+                div.style.display = 'none';
+            });
+            
+            document.getElementById(`${category}-settings`).style.display = 'block';
+        }
+        
+        function shutdown() {
+            if (confirm('Наистина ли искате да изключите компютъра?')) {
+                document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background-color:black;color:white;font-size:24px;">Windows се изключва...</div>';
+                setTimeout(() => {
+                    document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background-color:black;color:white;font-size:24px;">Можете безопасно да изключите компютъра</div>';
+                }, 2000);
+            }
+        }
+        
+        document.querySelectorAll('.window').forEach(windowElement => {
+            const header = windowElement.querySelector('.window-header');
+            let isDragging = false;
+            let offsetX, offsetY;
+
+            header.addEventListener('mousedown', (e) => {
+                if (windowElement.classList.contains('maximized') || e.target.classList.contains('window-control')) return;
+                
+                isDragging = true;
+                offsetX = e.clientX - windowElement.getBoundingClientRect().left;
+                offsetY = e.clientY - windowElement.getBoundingClientRect().top;
+                header.classList.add('dragging');
+                
+                zIndexCounter++;
+                windowElement.style.zIndex = zIndexCounter;
+                activeWindow = windowElement;
+                
+                document.querySelectorAll('.window').forEach(w => {
+                    if (w !== windowElement && w.style.display === 'block') {
+                        w.classList.add('inactive');
+                        w.classList.remove('active');
+                    }
+                });
+                
+                windowElement.classList.add('active');
+                windowElement.classList.remove('inactive');
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                let newLeft = e.clientX - offsetX;
+                let newTop = e.clientY - offsetY;
+
+                newLeft = Math.max(0, Math.min(newLeft, window.innerWidth - windowElement.offsetWidth));
+                newTop = Math.max(0, Math.min(newTop, window.innerHeight - windowElement.offsetHeight));
+
+                windowElement.style.left = `${newLeft}px`;
+                windowElement.style.top = `${newTop}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                header.classList.remove('dragging');
+            });
+            
+            const resizeHandle = document.createElement('div');
+            resizeHandle.style.width = '10px';
+            resizeHandle.style.height = '10px';
+            resizeHandle.style.position = 'absolute';
+            resizeHandle.style.right = '0';
+            resizeHandle.style.bottom = '0';
+            resizeHandle.style.cursor = 'se-resize';
+            resizeHandle.style.backgroundColor = 'transparent';
+            windowElement.appendChild(resizeHandle);
+            
+            let startWidth, startHeight, startX, startY;
+            
+            resizeHandle.addEventListener('mousedown', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                startX = e.clientX;
+                startY = e.clientY;
+                startWidth = parseInt(document.defaultView.getComputedStyle(windowElement).width, 10);
+                startHeight = parseInt(document.defaultView.getComputedStyle(windowElement).height, 10);
+                
+                document.documentElement.addEventListener('mousemove', resize, false);
+                document.documentElement.addEventListener('mouseup', stopResize, false);
+            });
+            
+            function resize(e) {
+                const newWidth = startWidth + e.clientX - startX;
+                const newHeight = startHeight + e.clientY - startY;
+                
+                if (newWidth > 400) windowElement.style.width = `${newWidth}px`;
+                if (newHeight > 300) windowElement.style.height = `${newHeight}px`;
+            }
+            
+            function stopResize() {
+                document.documentElement.removeEventListener('mousemove', resize, false);
+                document.documentElement.removeEventListener('mouseup', stopResize, false);
+            }
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.window') && !e.target.closest('.taskbar') && !e.target.closest('.start-menu')) {
+                document.querySelectorAll('.window').forEach(w => {
+                    w.classList.add('inactive');
+                    w.classList.remove('active');
+                });
+            }
+        });
+
+        // Инициализация при зареждане
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTime();
+            setInterval(updateTime, 1000);
+            setInterval(updateLiveTiles, 10000); // Актуализира живите тайлове на всеки 10 секунди
+            
+            selectMail(document.querySelector('.mail-item'), 1);
+            navigateTo('root'); 
+            updateLiveTiles(); // Инициализира живите тайлове
+            updateInstalledPatchesList(); // Инициализира списъка с инсталирани пачове
+            
+            document.querySelector('#explorer-window .main-content').addEventListener('click', function(e) {
+                if (!e.target.closest('.file-item')) {
+                    document.querySelectorAll('#explorer-window .file-item').forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                    selectedFile = null;
+                    updateActionButtons();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
